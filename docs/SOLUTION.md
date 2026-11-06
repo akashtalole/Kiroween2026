@@ -292,6 +292,12 @@ Spike gate (Nov 10): steps 1 and 2 on one fixture plus one real repo. If parity 
 
 ---
 
+## 12b. Advanced features
+
+Characterization-test generation, mutation-based proof strength, a Skeptic agent, Kiro workspace handoff, bisect, signed certificates and more are specified, tiered and estimated in [`ADVANCED_FEATURES.md`](ADVANCED_FEATURES.md). They build on the evidence store and do not change the core pipeline.
+
+---
+
 ## 13. Definition of done (submission)
 
 - [ ] `.kiro/` committed with specs, steering, hooks, MCP config (not gitignored)
