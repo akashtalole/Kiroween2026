@@ -61,6 +61,8 @@ Implication: every Kiro feature we use needs to be **visible in the repo and the
 
 ## 3. Architecture
 
+> Full end-to-end design (journeys, pipeline, data contracts, APIs, sandbox, testing, build order): see [`docs/SOLUTION.md`](docs/SOLUTION.md).
+
 ```
 necromancer/
 ├─ .kiro/                  # specs, steering, hooks, agents, MCP config (committed!)
