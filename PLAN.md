@@ -186,6 +186,8 @@ Show it running on the device it was built for; captions on; no copyrighted musi
 
 ## 11. Alternatives if we pivot (decide by Nov 10)
 
+(Full idea bank with Kiro-feature showcase and ratings is in section 13.)
+
 - **Teletext 2.0** (Resurrection): AI-summarised numbered pages for low-bandwidth users.
 - **Séance** (Frankenstein): repo autopsy and "ask the dead codebase" tool.
 - **Bones** (Skeleton Crew): spec-in-app-out template with two apps.
@@ -200,3 +202,70 @@ Show it running on the device it was built for; captions on; no copyrighted musi
 3. Student / Startup eligibility?
 4. LLM provider and budget for live runs.
 5. Python-only for v1: OK?
+
+---
+
+## 13. Expanded idea bank (each built to showcase Kiro)
+
+Every idea lists the Kiro features it makes *visible*, since depth of Kiro use is 20% of the score. Ratings (1-5) are my judgment, not data: **Imp**act, **Inn**ovation, **Des**ign potential, **Risk** (higher = riskier), **Eff**ort (higher = more work, ~4 weeks solo).
+
+### Resurrection
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| R1 | **Necromancer** | Revive dead OSS libs, prove parity with differential PBT | Specs from issue backlog, PBT, hooks, own MCP, custom agents | 5 | 5 | 3 | 4 | 5 |
+| R2 | **Dead Letter Office** | Find rotten links in a repo or docs site, recover from Wayback or a semantically matching live page, open a PR | Hook: link-check on commit; MCP: Wayback + GitHub; PBT: "a fix never changes non-link text"; steering: citation rules | 4 | 4 | 3 | 2 | 2 |
+| R3 | **NetNews 2.0** | Usenet reborn: NNTP-compatible newsgroups where humans and AI agents post, threads are queryable over MCP | MCP server as the product; spec for NNTP subset; PBT for threading/ordering invariants | 3 | 5 | 4 | 3 | 3 |
+| R4 | **HyperCard Reborn** | Stacks of cards with a tiny scripting language; LLM turns plain English into card scripts | Spec-driven interpreter, PBT for the parser (round-trip: parse then print), steering for the DSL | 3 | 4 | 5 | 3 | 4 |
+| R5 | **BBS Sysop** | Dial-up-style BBS with door games and an AI sysop, running in the browser | Vibe vs spec comparison is easy to showcase; hooks for content moderation tests | 2 | 3 | 5 | 1 | 2 |
+| R6 | **Teletext 2.0** | Numbered pages of AI-summarised news, prices, results for 2G and SMS users | Steering for plain-language rules; MCP data sources; PBT for page-size limits | 4 | 4 | 4 | 2 | 3 |
+
+### Frankenstein
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| F1 | **Séance** | Repo autopsy (git history + AST + logs + LLM) with a "ask the dead codebase" chat | Custom agents (coroner, historian), MCP over git, hooks | 4 | 4 | 4 | 2 | 3 |
+| F2 | **Pipes & Cells** | A spreadsheet whose cells are shell pipelines and MCP tool calls; recalculation is a dataflow graph | Spec for the dependency graph, PBT for recalculation (order-independent, cycle-safe), MCP as cell functions | 3 | 5 | 4 | 3 | 4 |
+| F3 | **Reanimated SQL** | Every row change is a git commit; query "as of" any time; branch and merge tables | PBT for merge invariants (commutativity where claimed), specs for the storage format | 3 | 5 | 2 | 4 | 4 |
+| F4 | **Tarot Postmortem** | Incident review that stitches logs, alerts, chat export and a tarot-style narrative into a blameless timeline | Steering for blameless tone, hooks for PII scrubbing, MCP for log sources | 4 | 3 | 5 | 2 | 3 |
+
+### Skeleton Crew (repo needs two separate app folders)
+
+| # | Idea | Pitch | Two apps | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|----------|---------------|-----|-----|-----|------|-----|
+| S1 | **Bones** | One spec generates data model, API, MCP server and UI | Clinic queue; haunted-house booking | Specs *are* the framework; steering as template rules | 4 | 4 | 3 | 3 | 4 |
+| S2 | **Ribcage** | Template for production-grade MCP servers: auth, rate limits, tests, PBT harness, docs | Library-lending MCP; tabletop-RPG campaign MCP | MCP, PBT, hooks, powers; easy to prove versatility | 4 | 3 | 2 | 2 | 3 |
+| S3 | **Marrow** | Local-first, offline-sync skeleton with CRDTs | Shared grocery list; field-inspection forms | PBT for CRDT convergence (a natural fit), specs | 4 | 4 | 3 | 4 | 4 |
+
+### Costume Contest
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| C1 | **Ledger of the Dead** | Budget/habit tracker where ghosts represent unpaid bills and abandoned goals | Steering for design tokens and a11y; hook for contrast checks | 3 | 3 | 5 | 1 | 2 |
+| C2 | **Spirit Board Flashcards** | Spaced repetition where forgotten cards become ghosts you re-bind by recall | PBT for the scheduler (intervals monotonic, no card lost), design steering | 4 | 3 | 5 | 1 | 2 |
+| C3 | **Haunted On-Call** | Incident triage dashboard: alerts as apparitions, runbooks as exorcisms | MCP for alert sources, hooks, specs for severity logic | 4 | 3 | 5 | 2 | 3 |
+
+### Startup angle ($10k Best Startup Project, founders only)
+
+- **Necro.dev**: maintained-fork-as-a-service for orphaned dependencies (sell to companies stuck on a dead lib). Needs LinkedIn plus a startup website in the submission.
+- **Dead Letter Office as a GitHub App**: recurring link-health monitoring for docs teams.
+
+### Kiro Crew bonus ($1,000)
+
+Any pipeline with distinct roles fits: Necromancer as a crew (**Coroner** diagnoses, **Surgeon** patches, **Priest** verifies parity, **Gravedigger** cleans up), or Dead Letter Office as (**Finder**, **Archivist**, **Editor**). Check Crew's current capabilities before committing.
+
+### How I'd choose
+
+- **Highest ceiling:** R1 Necromancer.
+- **Best hedge (low risk, still strong):** R2 Dead Letter Office. It shares the Resurrection category, reuses the same Kiro story (hooks, MCP, PBT), and could ship in about a week. Build it first as a warm-up or fallback.
+- **Strongest pure Kiro-depth story:** S2 Ribcage (MCP + PBT + powers) or S3 Marrow (PBT on CRDTs).
+- **Best design play:** C2 Spirit Board Flashcards.
+
+### Combine for more Kiro depth
+
+Ship **one flagship plus one small sibling in the same repo family**, for example Necromancer plus Dead Letter Office sharing the `necromancer-mcp` server. This does not enter two categories (each submission has one), but it makes the Kiro write-up richer: one reusable MCP, two specs families, shared steering.
+
+### Verify before committing to any idea
+- Search Devpost's Kiroween 2025 gallery and GitHub for near-duplicates (innovation score).
+- Confirm every external API (Wayback, OSV, GitHub) has usable rate limits for a live demo.
+- Confirm trademark safety: no real brand names or assets (e.g. skip Clippy/Winamp-style references).
