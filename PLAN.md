@@ -271,3 +271,73 @@ Ship **one flagship plus one small sibling in the same repo family**, for exampl
 - Search Devpost's Kiroween 2025 gallery and GitHub for near-duplicates (innovation score).
 - Confirm every external API (Wayback, OSV, GitHub) has usable rate limits for a live demo.
 - Confirm trademark safety: no real brand names or assets (e.g. skip Clippy/Winamp-style references).
+
+---
+
+## 14. Idea bank, round 2 (new angles)
+
+Same rating scale as section 13 (1-5, my judgment; Risk and Effort: higher is worse). This round adds three groups: **legacy and data rescue** (strong real-world impact), **Kiro-native tools** (the judges are the Kiro team, and tools that improve Kiro workflows score well on Technological Implementation), and **design and accessibility plays**.
+
+### Resurrection: legacy and data rescue
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| R7 | **Rosetta Crypt** | Translate legacy COBOL/Fortran/Pascal routines to modern Python or TS, and *prove* equivalence with differential property-based tests (reuses the Necromancer parity engine) | Specs per routine, PBT is the product, hooks run proof on every translated unit, MCP for a reference interpreter | 5 | 4 | 3 | 4 | 4 |
+| R8 | **Format Morgue** | Revive obsolete file formats (old word processors, spreadsheets, image formats) with spec-driven converters; round-trip properties verify no data loss | Spec per format from public documentation, PBT round-trip (`decode(encode(x)) == x`), steering for byte-level rules | 4 | 4 | 3 | 3 | 3 |
+| R9 | **Afterlife** | Rescue your data from shut-down services: import a user's own export archives into open formats (OPML, Markdown, JSON, ICS) with a verified completeness report | Specs per service archive format, PBT for "no item lost", hooks scrubbing sample data, MCP to query the rescued archive | 5 | 3 | 4 | 2 | 3 |
+| R10 | **Revive a Language** | Community dictionary and spaced-repetition app for an endangered language, with audio and example sentences supplied by speakers | Steering for consent and attribution rules, specs for dataset provenance, PBT for the scheduler | 5 | 3 | 4 | 4 | 4 |
+
+Notes:
+- R7 is Necromancer's sibling, not a separate engine: it swaps "upgrade a library" for "translate a routine" while reusing the parity proof. Its main risk is a trustworthy reference implementation of the legacy language; limit to a small subset with an existing open-source interpreter.
+- R9 must only process archives *the user supplies* and must be built from public format documentation and synthetic sample files. No scraping, no credentials.
+- R10 needs real community involvement to be credible; treat it as high-risk unless you already have a partner. Never fabricate language data.
+
+### Frankenstein
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| F5 | **Spectral Shell** | Voice-controlled terminal for developers with limited mobility: speech recognition + shell + intent parsing, with a safety layer that always confirms destructive commands | Steering with a command risk taxonomy, PBT on the safety classifier (no destructive command passes unconfirmed), hooks, MCP for shell tools | 5 | 4 | 4 | 3 | 3 |
+| F6 | **Spec Autopsy** | A linter and analyser for Kiro specs: EARS validity, requirement-to-task traceability, orphan tasks, vague words; drafts PBT properties from acceptance criteria | Dogfoods specs and PBT, ships as an MCP server and a Kiro hook, easy to demonstrate | 4 | 4 | 3 | 2 | 3 |
+
+### Kiro-native tools (judged by the people who build Kiro)
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| K1 | **Steering Lab** | An A/B harness that answers "does this steering doc actually change Kiro's output?": run the same task with and without a steering file, score the diffs against a rubric | Steering is the subject; CLI for batch runs, custom agents as graders, evidence in the write-up | 4 | 4 | 3 | 3 | 3 |
+| K2 | **Spec Archaeology** | Reverse-engineer specs from legacy behaviour: record an app's observable behaviour (API traffic, CLI sessions), cluster it, and emit EARS requirements plus property tests | Reverse of the normal spec flow; strong startup story for legacy modernisation | 5 | 5 | 3 | 4 | 4 |
+| K3 | **A Kiro Power** | Package a focused, high-quality Power (bundled MCP tools + steering + docs), for example accessibility auditing or API-contract checking, and show it improving a real build | Power authoring is the whole story; verify the packaging format in the app first | 3 | 3 | 2 | 2 | 2 |
+
+### Skeleton Crew
+
+| # | Idea | Pitch | Two apps | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|----------|---------------|-----|-----|-----|------|-----|
+| S4 | **Vertebrae** | Minimal evaluation-harness skeleton for LLM apps: datasets, graders, regression gates, a report page | Support-bot evaluator; code-review-agent evaluator | PBT for grader consistency, specs for the harness contract, hooks as regression gates | 4 | 3 | 3 | 2 | 3 |
+| S5 | **Hexa-Core** | One domain core with three thin front ends (CLI, web, chat bot) generated from a spec | Habit tracker; shared-expense splitter | Spec to ports/adapters, steering for architecture rules | 3 | 3 | 3 | 2 | 3 |
+
+### Costume Contest
+
+| # | Idea | Pitch | Kiro showcase | Imp | Inn | Des | Risk | Eff |
+|---|------|-------|---------------|-----|-----|-----|------|-----|
+| C4 | **Ghost Cartographer** | Map of local legends and folklore from open datasets and contributed stories, with a haunted-map UI (fog, flickering lanterns) | Steering for design tokens and contrast, hook for a11y checks, specs for the map data model | 2 | 3 | 5 | 1 | 2 |
+| C5 | **Mourning Reader** | Distraction-free reading app where text "materialises" line by line, dyslexia-friendly typography, reduced-motion safe | Design steering, PBT for pagination (no text lost or duplicated), a11y hooks | 3 | 3 | 5 | 1 | 2 |
+
+### Round-2 observations
+
+- **Highest-impact new ideas:** R9 Afterlife and R7 Rosetta Crypt. Both are about real losses (data, legacy knowledge) and both have an objective completeness or equivalence check.
+- **Most Kiro-native:** K2 Spec Archaeology and F6 Spec Autopsy. They turn Kiro's own concepts (specs, PBT) into the product, which makes the "deep understanding of Kiro features" criterion easy to demonstrate.
+- **Best synergy with the existing plan:** R7 and K2 both reuse the Necromancer parity and characterization machinery (see `docs/ADVANCED_FEATURES.md`, A1). If you build the engine once, you can show it as a pipeline with two front doors.
+- **Lowest risk:** R9, C4, C5, K3.
+- **Watch-outs:** innovation scoring penalises ideas that resemble existing tools; check Kiroween 2025 submissions and GitHub before committing. Avoid any real service logos, brand names or proprietary file samples.
+
+### Timing reality check (as of Nov 13)
+
+About 21 days remain until Dec 4 and no idea is locked. The Nov 10 spike gate in section 5 has passed unexecuted, so treat the schedule as compressed:
+
+| Window | Goal |
+|---|---|
+| Nov 13-15 | **Decide the idea.** Request Kiro credits (deadline Dec 1, review ~48 business hours, so do it today). Check for near-duplicates |
+| Nov 16-20 | Scaffold, steering, first spec, core engine spike with go/no-go on Nov 20 |
+| Nov 21-27 | Core features plus one advanced feature; design pass; feature freeze Nov 29 |
+| Nov 28-Dec 3 | Demo bundles, video, write-up, blog and social posts, submit Dec 3 |
+
+If the engine-heavy ideas (R1, R7, K2) feel too big for three weeks, the lower-effort picks above (R2 Dead Letter Office, R9 Afterlife, K3 Power, S4 Vertebrae) still compete well when the Kiro usage is deep and the demo is clean.
