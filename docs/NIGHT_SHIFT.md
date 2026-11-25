@@ -220,6 +220,8 @@ Honesty rules: report failures and escalations; show the first night, which will
 
 ## 12. Kiro feature coverage (for the write-up)
 
+> Detailed per-feature plan, surface limits, experiments E1 to E8 and the evidence log: [`KIRO_FEATURE_PLAN.md`](KIRO_FEATURE_PLAN.md). Write-up template: [`WRITEUP.md`](WRITEUP.md).
+
 | Feature | Where it appears |
 |---|---|
 | **Kiro Crew** | Bots, scheduled jobs, conductor mode with workers, dashboard, memory, Crew-app repo |
