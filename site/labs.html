@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build labs · Night Shift</title>
+<meta name="description" content="Eight hands-on labs for building Night Shift with Kiro CLI, Crew, hooks, specs, MCP and property tests.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239b7bff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="labs">
+<main id="main"><div class="wrap" style="padding-top:36px;padding-bottom:64px">
+  <div class="eyebrow">Build labs</div><h1 style="font-size:clamp(28px,5vw,42px)">Build Night Shift step by step</h1>
+  <p class="muted" style="max-width:760px">Do them in order. Each lab ends with an experiment you log, so the write-up is assembled from evidence rather than memory.</p>
+  <div class="grid grid-2" id="grid"></div>
+</div></main>
+<script src="assets/site.js"></script>
+<script>
+window.NS.getJSON("data/labs.json").then(function (d) {
+  var N = window.NS;
+  document.getElementById("grid").innerHTML = d.labs.map(function (l) {
+    return '<a class="card" href="lab.html?id=' + l.slug + '"><div class="num">LAB ' + l.id + " · " + N.esc(l.category).toUpperCase() + "</div><h3>" + N.esc(l.title) + "</h3><p>" + N.esc(l.summary) + "</p>" + '<span class="chip">' + N.esc(l.level) + '</span><span class="chip">⏱ ' + N.esc(l.duration) + "</span>" + N.chips(l.services, "violet") + "</a>";
+  }).join("");
+});
+</script>
+</body>
+</html>
