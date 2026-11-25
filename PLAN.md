@@ -7,7 +7,13 @@ Status of this doc: planning draft, 2026-11-05. Nothing here is built yet.
 
 ---
 
-## DECISION (Nov 25): build **Dead Letter Office**
+## UPDATE (Nov 25, later): new direction is **Night Shift**
+
+You asked for something much more advanced using **Kiro Crew and Kiro CLI together**, modelled on the Kiro *Frontier teams* page, covering Resurrection, Frankenstein and Skeleton Crew. The design is in [`docs/NIGHT_SHIFT.md`](docs/NIGHT_SHIFT.md): one Skeleton Crew submission containing two apps (a Resurrection app and a Frankenstein app) plus a separate Kiro Crew app repo for the bonus prize. **Dead Letter Office below remains the fallback** if Night Shift's Day-1 viability check fails.
+
+---
+
+## DECISION (Nov 25, earlier): build **Dead Letter Office**
 
 Nine days remain (deadline Dec 4, 2:00 pm PT). Necromancer is too large for that. Dead Letter Office (idea R2) is the pick: **Resurrection** category, small enough to finish, demoable in 30 seconds, and it exercises every Kiro feature the judges ask about. Necromancer stays as the roadmap story ("this is the first piece").
 
