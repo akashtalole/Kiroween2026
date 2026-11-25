@@ -7,6 +7,57 @@ Status of this doc: planning draft, 2026-11-05. Nothing here is built yet.
 
 ---
 
+## DECISION (Nov 25): build **Dead Letter Office**
+
+Nine days remain (deadline Dec 4, 2:00 pm PT). Necromancer is too large for that. Dead Letter Office (idea R2) is the pick: **Resurrection** category, small enough to finish, demoable in 30 seconds, and it exercises every Kiro feature the judges ask about. Necromancer stays as the roadmap story ("this is the first piece").
+
+**One-line pitch.** Link rot silently kills documentation. Dead Letter Office finds every dead link in a repo or docs site, resurrects it from the Wayback Machine or a verified replacement page, and opens a fix with evidence for each change.
+
+**What makes it more than a link checker**
+1. **Git-aware dating.** `git blame` tells us *when* each link was added, so we pick the archived snapshot closest to that date, which is the page the author actually meant.
+2. **Content-verified replacement.** If the page moved, we find a live candidate (redirect target, same-site sitemap, optional search) and score it by text similarity against the archived snapshot. Each fix carries a confidence tier; low confidence is never auto-applied.
+3. **Evidence per fix.** Every change shows before/after, snapshot date, similarity score, and why it was chosen. Reviewers can trust or reject each one.
+4. **Provable safety.** Property-based tests assert a fix changes *only* link targets: all surrounding text stays byte-identical, and a second run changes nothing.
+
+**Scope for 9 days (hard limits)**
+- Inputs: Markdown and reStructuredText files in a local repo or cloned URL. HTML optional.
+- Recovery order: redirect resolution, Wayback snapshot nearest the blame date, same-domain candidate by similarity. No paid APIs required; LLM optional and off by default.
+- Outputs: patch file plus a report (Markdown/JSON) and a small web report page; PR opening only on a demo repo you own, never unsolicited on other people's repositories.
+
+**Kiro features (each one must be visible in the repo)**
+| Feature | Use |
+|---|---|
+| Specs | 4 small specs: `link-extractor`, `link-checker`, `recovery`, `patcher-report` |
+| Steering | `product.md`, `tech.md`, plus `link-rules.md` (what counts as dead, soft-404, safe to auto-fix) |
+| Hooks | link-check on save of `*.md`; test-on-save; secret scan pre-commit |
+| MCP | Own `archivist-mcp` (Wayback lookup, check link, suggest fix) plus a GitHub MCP |
+| PBT | Extractor finds every rendered link; patcher changes only link targets; idempotent; URL normalisation round-trips |
+| Custom agent | `archivist` (read-only investigator) and `editor` (applies patches, limited scope) |
+
+**Design.** A dead-letter-office theme: dead links are undelivered letters stamped RETURN TO SENDER; recovered links get a DELIVERED stamp. The spooky styling carries meaning and stays accessible (contrast, reduced motion).
+
+### 9-day schedule
+
+| Date | Goal |
+|---|---|
+| **Nov 25 (today)** | Request Kiro credits. Scaffold repo, steering, first spec. Link extractor + PBT |
+| Nov 26 | Link checker (retries, soft-404, redirect chains), classification |
+| Nov 27 | Recovery: Wayback CDX lookup, git-blame dating |
+| Nov 28 | Similarity matcher, confidence tiers, patcher + idempotence property |
+| Nov 29 | MCP server, hooks, custom agents. **Feature freeze** |
+| Nov 30 | Web report page and visual design |
+| Dec 1 | Run on 3 real repos for demo bundles. README, Docker/pip quick start. Credit-form deadline 12:00 pm PT (do it today) |
+| Dec 2 | Video (under 3 min), Kiro write-up, blog post, `#KiroweenHackathon26` post |
+| Dec 3 | Fresh-clone test, licence and `.kiro` check, **submit** |
+| Dec 4 | Buffer only |
+
+If something slips, cut in this order: web report page (keep Markdown report), custom agents, GitHub MCP. Never cut the PBT properties, the evidence report, or the video.
+
+### Credit-form blurb (replace the old one)
+> Dead Letter Office finds dead links in documentation repos and resurrects them from the Wayback Machine or verified replacement pages, using git history to pick the snapshot the author originally meant. Every fix ships with evidence and a confidence tier, and property-based tests guarantee only link targets change. Category: Resurrection.
+
+---
+
 ## 0. Do this week (blocking items)
 
 | # | Action | Deadline |
