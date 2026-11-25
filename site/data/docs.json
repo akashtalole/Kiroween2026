@@ -1,0 +1,40 @@
+{
+ "docs": [
+  {
+   "id": "night-shift",
+   "title": "Night Shift design",
+   "file": "NIGHT_SHIFT.md",
+   "summary": "The chosen design: org as code, roles, pipeline, autonomy policy, bots, the two apps, metrics, schedule."
+  },
+  {
+   "id": "kiro-features",
+   "title": "Kiro feature coverage plan",
+   "file": "KIRO_FEATURE_PLAN.md",
+   "summary": "How every Kiro feature is used, surface constraints, experiments E1 to E8, evidence discipline."
+  },
+  {
+   "id": "writeup",
+   "title": "Write-up template",
+   "file": "WRITEUP.md",
+   "summary": "The judges' questions as headings, to be filled only from logged evidence."
+  },
+  {
+   "id": "solution",
+   "title": "Necromancer end-to-end design",
+   "file": "SOLUTION.md",
+   "summary": "Roadmap project: full pipeline, data contracts, parity engine."
+  },
+  {
+   "id": "advanced",
+   "title": "Advanced features (tiered)",
+   "file": "ADVANCED_FEATURES.md",
+   "summary": "Characterization tests, proof strength, skeptic agent and more."
+  },
+  {
+   "id": "plan",
+   "title": "Master plan and idea bank",
+   "file": "PLAN.md",
+   "summary": "Rules, scoring, idea banks, decision log and timeline."
+  }
+ ]
+}

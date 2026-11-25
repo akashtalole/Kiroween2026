@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Night Shift: a skeleton crew of AI agents</title>
+<meta name="description" content="Kiroween 2026 playbook: an AI-native engineering org built with Kiro IDE, CLI, Web and Crew. Ideas, design, build labs and a feature-by-feature evidence plan.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239b7bff'/><text x='16' y='23' font-size='18' font-family='Arial' font-weight='700' text-anchor='middle' fill='%23ff8a3d'>N</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="home">
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <a class="banner" href="ideas.html"><b>NEW</b> 32 ideas rated across Resurrection, Frankenstein, Skeleton Crew, Costume Contest →</a>
+      <h1>A skeleton crew of AI agents<br>that <em>ships while you sleep</em>.</h1>
+      <p class="lede">Night Shift is an AI-native engineering org in a box, built with Kiro IDE, CLI, Web and Crew. Humans set intent and boundaries. Agents build in parallel overnight, property tests verify, a deterministic policy decides what merges, and every human touch is measured.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="lab.html?id=01-setup-smoke-test">Start the 30-minute setup lab →</a>
+        <a class="btn btn-ghost" href="doc.html?doc=night-shift">Read the design</a>
+        <a class="btn btn-ghost" href="ideas.html">Browse all ideas</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="s-ideas">32</b><span>Ideas rated</span></div>
+        <div class="stat"><b id="s-labs">8</b><span>Build labs</span></div>
+        <div class="stat"><b>8</b><span>Kiro features, each with an experiment</span></div>
+        <div class="stat"><b id="s-days">–</b><span>Days to the Dec 4 deadline</span></div>
+      </div>
+      <div class="arch" id="arch" aria-label="Clickable architecture of Night Shift"></div>
+    </div>
+  </section>
+
+  <section id="categories">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">One skeleton, three categories</div><h2>How it maps to the hackathon</h2></div>
+        <p>The submission is <b>Skeleton Crew</b>: a lean foundation plus two distinct apps. One app is a Resurrection, the other a Frankenstein, so the same work speaks to all three categories without splitting into near-duplicate entries.</p></div>
+      <div class="grid grid-3">
+        <a class="card" href="ideas.html?category=Skeleton+Crew"><div class="num">SKELETON CREW</div><h3>Night Shift</h3><p>Org-as-code: steering, role agents, hooks, specs, policy and metrics. Small enough to read in an hour.</p><span class="chip accent">The submission</span></a>
+        <a class="card" href="ideas.html?category=Resurrection"><div class="num">RESURRECTION</div><h3>Lazarus</h3><p>A 2003-style Perl CGI bulletin board, specified from its existing behaviour, rewritten by agents, and proven equivalent with differential tests.</p><span class="chip violet">App 1 of 2</span></a>
+        <a class="card" href="ideas.html?category=Frankenstein"><div class="num">FRANKENSTEIN</div><h3>Chimera</h3><p>A spreadsheet whose cells are formulas, shell pipelines or HTTP calls, built greenfield from one paragraph of intent.</p><span class="chip violet">App 2 of 2</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">Every Kiro feature, on purpose</div><h2>Eight features, eight experiments</h2></div>
+        <p>The judges ask how each feature changed the build. Each one has a job in the project, a repo artifact, and a small experiment whose result is logged the same day. <a href="doc.html?doc=kiro-features">Read the plan →</a></p></div>
+      <div class="grid grid-4">
+        <div class="card"><div class="num">E1 · SURFACES</div><h3>IDE, CLI, Web, Crew</h3><p>Same task on all four; time, credits, retries compared.</p></div>
+        <div class="card"><div class="num">E2 · AGENTS</div><h3>Custom agents</h3><p>Eight least-privilege roles; default vs role agent.</p></div>
+        <div class="card"><div class="num">E3 · HOOKS</div><h3>Hooks</h3><p>Spec gate, scope guard, touch logger; hooks off vs on.</p></div>
+        <div class="card"><div class="num">E4 · SPECS</div><h3>Spec-driven</h3><p>EARS with property tags; same feature by spec and by vibe.</p></div>
+        <div class="card"><div class="num">E5 · STEERING</div><h3>Steering</h3><p>None vs terse vs rich, scored against a rubric.</p></div>
+        <div class="card"><div class="num">E6 · MCP</div><h3>MCP</h3><p>Shared org state and a live legacy oracle.</p></div>
+        <div class="card"><div class="num">E7 · PBT</div><h3>Property tests</h3><p>Plant bugs; compare unit tests with property tests.</p></div>
+        <div class="card"><div class="num">E8 · POWERS</div><h3>Powers</h3><p>Our own power vs always-on MCP; third-party trials, kept only if they help.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="labs">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">Build it</div><h2>Eight hands-on labs</h2></div><p>From a headless smoke test to the submission checklist. Code in the labs marked as tested has been run; everything else is labelled as a starting point.</p></div>
+      <div class="grid grid-4" id="lab-grid"></div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">Nine days</div><h2>Schedule to the deadline</h2></div><p>Humans build the skeleton by day; agents run the apps by night.</p></div>
+      <ol class="timeline" id="tl"></ol>
+    </div>
+  </section>
+
+  <section id="honesty" style="border-bottom:0">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">What we claim</div><h2>Measured, not promised</h2></div></div>
+      <div class="card"><p>The headline number is the <b>Human Touch Index</b> from our own ledger: zero-touch rate, touches per task, human seconds per merged task, retries, credits and escapes. The first night will look worse than the third. Results quoted on Kiro's frontier-teams page belong to those teams; we cite them as motivation only. Details marked <i>verify</i> in the docs are things not yet confirmed against the live product.</p></div>
+    </div>
+  </section>
+</main>
+<script src="assets/site.js"></script>
+<script src="assets/arch.js"></script>
+<script>
+(function () {
+  var N = window.NS;
+  document.getElementById("s-days").textContent = N.daysLeft();
+  N.getJSON("data/labs.json").then(function (d) {
+    document.getElementById("s-labs").textContent = d.labs.length;
+    document.getElementById("lab-grid").innerHTML = d.labs.map(function (l) {
+      return '<a class="card" href="lab.html?id=' + l.slug + '"><div class="num">LAB ' + l.id + " · " + N.esc(l.category).toUpperCase() + "</div><h3>" + N.esc(l.title) + "</h3><p>" + N.esc(l.summary) + "</p>" + '<span class="chip">' + N.esc(l.level) + '</span><span class="chip">⏱ ' + N.esc(l.duration) + "</span></a>";
+    }).join("");
+  });
+  N.getJSON("data/ideas.json").then(function (d) { document.getElementById("s-ideas").textContent = d.ideas.length; });
+  var rows = [["Nov 25", "Install CLI and Crew, smoke test, bake-off E1, steering and agents"], ["Nov 26", "Orchestrator, Spec Gate hook, night 1 smoke run"], ["Nov 27", "Gates, evidence pack, policy engine; E2 E4 E5 E8"], ["Nov 28", "Legacy Perl app, characterization harness; E3 E7"], ["Nov 29", "Crew bots and schedules. Skeleton feature freeze"], ["Nov 30", "Review exception queue; dashboard; E6"], ["Dec 1", "Full clean run for the video numbers. Credit form deadline 12:00 pm PT"], ["Dec 2", "Video under 3 min, write-up, blog, #KiroweenHackathon26 post"], ["Dec 3", "Fresh-clone test, license and .kiro check, submit"], ["Dec 4", "Buffer. Deadline 2:00 pm PT"]];
+  document.getElementById("tl").innerHTML = rows.map(function (r) { return '<li><span class="d">' + r[0] + '</span><span class="n">' + N.esc(r[1]) + "</span></li>"; }).join("");
+})();
+</script>
+</body>
+</html>

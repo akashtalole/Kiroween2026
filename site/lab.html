@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab · Night Shift</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239b7bff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="labs">
+<main id="main"><div class="wrap layout">
+  <div><div id="crumbs" class="crumbs"></div><article class="md" id="content"><p class="muted">Loading…</p></article><nav class="pager" id="pager" aria-label="Lab navigation"></nav></div>
+  <aside><div class="box"><h4>On this page</h4><ul id="toc"></ul></div></aside>
+</div></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script src="assets/site.js"></script>
+<script>
+(function () {
+  var N = window.NS, id = new URLSearchParams(location.search).get("id") || "", el = document.getElementById("content");
+  N.getJSON("data/labs.json").then(function (d) {
+    var labs = d.labs, i = labs.findIndex(function (l) { return l.slug === id || l.id === id; }), lab = labs[i];
+    if (!lab) { el.innerHTML = '<h1>Lab not found</h1><p><a href="labs.html">Browse all labs →</a></p>'; return; }
+    document.title = "Lab " + lab.id + " · " + lab.title;
+    document.getElementById("crumbs").innerHTML = '<a href="labs.html">Labs</a> / ' + N.esc(lab.category);
+    return fetch("content/labs/" + lab.slug + ".md").then(function (r) { if (!r.ok) throw new Error("lab file " + r.status); return r.text(); }).then(function (md) {
+      return N.renderMarkdown(el, md);
+    }).then(function () {
+      N.toc(el, document.getElementById("toc"));
+      var p = labs[i - 1], n = labs[i + 1];
+      document.getElementById("pager").innerHTML = (p ? '<a class="prev" href="lab.html?id=' + p.slug + '"><small>← Previous</small>Lab ' + p.id + " · " + N.esc(p.title) + "</a>" : "<span></span>") + (n ? '<a class="next" href="lab.html?id=' + n.slug + '"><small>Next →</small>Lab ' + n.id + " · " + N.esc(n.title) + "</a>" : "");
+    });
+  }).catch(function (e) { el.innerHTML = '<p class="note">Could not load this lab: ' + N.esc(e.message) + "</p>"; });
+})();
+</script>
+</body>
+</html>

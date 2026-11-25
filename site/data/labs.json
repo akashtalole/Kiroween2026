@@ -1,0 +1,152 @@
+{
+ "labs": [
+  {
+   "slug": "01-setup-smoke-test",
+   "id": "01",
+   "title": "Install and smoke-test Kiro CLI and Crew",
+   "category": "Foundations",
+   "level": "Beginner",
+   "duration": "30 min",
+   "summary": "Install the CLI and Crew, prove headless runs work, and run the four-surface bake-off (E1).",
+   "services": [
+    "Kiro CLI",
+    "Kiro Crew",
+    "Kiro IDE",
+    "Kiro Web"
+   ],
+   "tags": [
+    "setup",
+    "headless",
+    "E1"
+   ]
+  },
+  {
+   "slug": "02-steering-and-agents",
+   "id": "02",
+   "title": "Steering and role agents",
+   "category": "Context",
+   "level": "Beginner",
+   "duration": "45 min",
+   "summary": "Write layered steering and eight least-privilege custom agents; run the steering ablation (E5) and agent A/B (E2).",
+   "services": [
+    "Steering",
+    "Custom agents"
+   ],
+   "tags": [
+    "steering",
+    "agents",
+    "E2",
+    "E5"
+   ]
+  },
+  {
+   "slug": "03-hooks",
+   "id": "03",
+   "title": "Hooks that run the org",
+   "category": "Automation",
+   "level": "Intermediate",
+   "duration": "60 min",
+   "summary": "Spec gate, scope guard, test-on-save, touch logger, gate-on-stop: hooks as the always-on rules (E3).",
+   "services": [
+    "Hooks"
+   ],
+   "tags": [
+    "hooks",
+    "ledger",
+    "E3"
+   ]
+  },
+  {
+   "slug": "04-specs-ears-pbt",
+   "id": "04",
+   "title": "Specs with EARS and property tags",
+   "category": "Intent",
+   "level": "Intermediate",
+   "duration": "60 min",
+   "summary": "Structure a spec so every criterion is tagged for property or example tests; compare spec vs vibe coding (E4).",
+   "services": [
+    "Specs",
+    "PBT"
+   ],
+   "tags": [
+    "specs",
+    "EARS",
+    "E4"
+   ]
+  },
+  {
+   "slug": "05-policy-engine-pbt",
+   "id": "05",
+   "title": "The autonomy policy engine and its property tests",
+   "category": "Correctness",
+   "level": "Intermediate",
+   "duration": "60 min",
+   "summary": "Run a tested, deterministic tier classifier; plant bugs and compare unit tests with property tests (E7).",
+   "services": [
+    "PBT",
+    "Python"
+   ],
+   "tags": [
+    "policy",
+    "hypothesis",
+    "E7"
+   ]
+  },
+  {
+   "slug": "06-mcp-servers",
+   "id": "06",
+   "title": "Two MCP servers: shared state and a legacy oracle",
+   "category": "Integration",
+   "level": "Advanced",
+   "duration": "90 min",
+   "summary": "Build nightshift-mcp (queue, ledger, policy) and a legacy-oracle MCP; measure the difference (E6).",
+   "services": [
+    "MCP",
+    "Powers"
+   ],
+   "tags": [
+    "MCP",
+    "oracle",
+    "E6",
+    "E8"
+   ]
+  },
+  {
+   "slug": "07-crew-night-conductor",
+   "id": "07",
+   "title": "Crew bots and the Night Conductor",
+   "category": "Autonomy",
+   "level": "Advanced",
+   "duration": "90 min",
+   "summary": "Parallel headless workers in git worktrees, scheduled by Crew, summarised by a morning briefing bot.",
+   "services": [
+    "Kiro Crew",
+    "Kiro CLI",
+    "Kiro Web"
+   ],
+   "tags": [
+    "bots",
+    "worktrees",
+    "schedule"
+   ]
+  },
+  {
+   "slug": "08-evidence-and-submission",
+   "id": "08",
+   "title": "Evidence, write-up and submission",
+   "category": "Shipping",
+   "level": "Beginner",
+   "duration": "45 min",
+   "summary": "Turn the log into the write-up, record the video, check every submission requirement and bonus prize.",
+   "services": [
+    "Devpost",
+    "GitHub"
+   ],
+   "tags": [
+    "write-up",
+    "video",
+    "checklist"
+   ]
+  }
+ ]
+}
