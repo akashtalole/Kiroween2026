@@ -398,3 +398,24 @@ About 21 days remain until Dec 4 and no idea is locked. The Nov 10 spike gate in
 | Nov 28-Dec 3 | Demo bundles, video, write-up, blog and social posts, submit Dec 3 |
 
 If the engine-heavy ideas (R1, R7, K2) feel too big for three weeks, the lower-effort picks above (R2 Dead Letter Office, R9 Afterlife, K3 Power, S4 Vertebrae) still compete well when the Kiro usage is deep and the demo is clean.
+
+---
+
+## 15. Idea bank, round 3 (Nov 26)
+
+Thirteen more ideas, all rated in `site/data/ideas.json` and browsable on the site. Night Shift remains the chosen project; with 8 days left, treat these as **swappable apps for the skeleton**, extra roadmap slides, or fallbacks, not new projects.
+
+| Group | Ideas |
+|---|---|
+| **Enterprise AI org** (natural extra apps for the Night Shift skeleton) | **Graveyard Shift Ops** (autonomous overnight on-call), **Policy Phantom** (compliance controls to executable checks), **Ticket to Spec** (customer tickets and analytics to ranked specs), **Ossuary** (data-pipeline skeleton with two apps) |
+| **Resurrection, knowledge and data** | **Legacy Whisperer** (undocumented codebase to living wiki and specs), **Paper Revival** (old research code reproduces its published numbers), **Open Data Revenant** (vanished datasets rebuilt from archives with provenance), **Dependency Reaper** (monorepo API migrations), **Executable README** (every doc sample runs) |
+| **Kiro-native tools** | **Spec Drift Watch** (code vs specs), **Hook Harness** (unit-test your hooks), **Flake Exorcist** (flaky-test bot) |
+| **Costume Contest** | **Crypt Briefing UI** (haunted dashboard for Night Shift's morning briefing) |
+
+**How they could help the chosen project**
+- **Legacy Whisperer** maps onto Lazarus's first phase (specs from existing behaviour) and costs almost nothing extra.
+- **Crypt Briefing UI** is the design-score play: Night Shift's morning briefing page is the one screen judges will see, so polishing it helps the Design and Presentation criteria.
+- **Graveyard Shift Ops** would be a third app proving the skeleton's versatility, but only if time is left after the two required apps; the Skeleton Crew rule asks for two.
+- **Hook Harness** and **Spec Drift Watch** fit the write-up's hooks and specs sections as small side-experiments.
+
+**Caution:** none of these has been checked against Kiroween 2025 submissions or existing tools for novelty.
