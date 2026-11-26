@@ -17,17 +17,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/ghost.js" defer></script>
 <script>
 (function () {
   var N = window.NS, id = new URLSearchParams(location.search).get("doc") || "night-shift", el = document.getElementById("content");
   N.getJSON("data/docs.json").then(function (d) {
     var doc = d.docs.filter(function (x) { return x.id === id; })[0];
     document.getElementById("all").innerHTML = d.docs.map(function (x) { return '<li><a href="doc.html?doc=' + x.id + '"' + (x.id === id ? ' aria-current="page" style="color:var(--accent)"' : "") + ">" + N.esc(x.title) + "</a></li>"; }).join("");
-    if (!doc) { el.innerHTML = "<h1>Document not found</h1>"; return; }
+    if (!doc) { el.innerHTML = '<h1>This document has passed on 👻</h1><p>Pick one that still walks among us from the list on the right, or <a href="index.html">go home</a>.</p>'; return; }
     document.title = doc.title + " · Night Shift";
     document.getElementById("crumbs").innerHTML = '<a href="index.html">Home</a> / Docs / ' + N.esc(doc.title);
     return fetch("content/docs/" + doc.file).then(function (r) { if (!r.ok) throw new Error(doc.file + " " + r.status); return r.text(); }).then(function (md) { return N.renderMarkdown(el, md); }).then(function () { N.toc(el, document.getElementById("toc")); });
-  }).catch(function (e) { el.innerHTML = '<p class="note">Could not load this document: ' + N.esc(e.message) + "</p>"; });
+  }).catch(function (e) { el.innerHTML = '<p class="note">The spirits couldn\'t fetch this document (check your connection, then reload). Details: ' + N.esc(e.message) + "</p>"; });
 })();
 </script>
 </body>
