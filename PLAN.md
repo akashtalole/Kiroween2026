@@ -446,3 +446,27 @@ Nine live-avatar ideas, rated on the site under the new **Live avatar** category
 - Always disclose that the avatar is AI-driven; captions on by default; respect `prefers-reduced-motion`.
 
 **Recommendation with 7 days left:** keep Night Shift. Add **Boo Live** as the briefing screen (about 1 day, design and demo payoff) and **Kiro Familiar** only if hooks are already working (half a day). Both are small enough not to endanger the two required apps.
+
+---
+
+## 17. Idea bank, round 5: advanced frontier ideas (Nov 27)
+
+Thirteen ideas that push Night Shift's frontier-team layer further. They're on the site under **Frontier (advanced)** and linked to `docs/FRONTIER_TEAM.md`. Ratings are judgment, not data.
+
+| Idea | What it adds | Effort | Fits the last 7 days? |
+|---|---|---|---|
+| **Red Team Night** | Inject faults on purpose (throttling, flaky tests, denied tools, prompt-injection issues) and score whether every guardrail held | low | **Yes.** The fake `kiro-cli` already has fault modes |
+| **Injection canaries** | Seeded malicious issues; any canary that succeeds fails CI | low | **Yes.** It also gives the security story a real number |
+| **Exhaustively verified merge policy** | Check every combination of the policy's bounded input space instead of sampling it | very low | **Yes.** Upgrades "property-tested" to "checked for the whole bounded domain" |
+| **Cost-aware model routing** | Cheaper models or lower effort for tier A0 work, escalation on retry, strong and different models for review | low | **Yes, if** the real CLI accepts the model IDs you have |
+| **Requirement-to-proof graph** | Requirement → property → test → killed mutant → commit, with a gate | medium | Partly: the gate yes, the visual later |
+| Counterfactual replay | Regression-test the org: replay last week's tasks with a new config before adopting it | high | No (roadmap) |
+| Self-improving steering | A bot tests steering variants on a held-out benchmark and proposes only proven rules | high | No (roadmap) |
+| Skill synthesis from reviews | Repeated review findings become proposed Agent Skills | medium | Roadmap |
+| Budget-packing scheduler | Learn task costs from the ledger and pack the night's budget by value | medium | Roadmap |
+| Semantic conflict prediction | Use the import graph, not just file overlap, to separate parallel tasks | medium | Roadmap |
+| Séance Replay | Time-travel viewer of any agent run from stream-json logs | medium | Maybe, as part of the demo UI |
+| Shadow mode | Agents work the same tickets as humans without merging, to calibrate the autonomy ladder | medium | Roadmap |
+| Spec mutation | Mutate the requirements and check the tests notice | medium | Roadmap |
+
+**Honest priority:** the submission still lacks the two required apps (`apps/lazarus`, `apps/chimera`) and a single real Kiro run. Any of the "Yes" ideas is worth at most half a day, and only after those exist. The roadmap ideas belong in the video's closing seconds and the "What's next" section, not in the build.
