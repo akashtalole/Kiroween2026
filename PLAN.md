@@ -419,3 +419,30 @@ Thirteen more ideas, all rated in `site/data/ideas.json` and browsable on the si
 - **Hook Harness** and **Spec Drift Watch** fit the write-up's hooks and specs sections as small side-experiments.
 
 **Caution:** none of these has been checked against Kiroween 2025 submissions or existing tools for novelty.
+
+---
+
+## 16. Idea bank, round 4: live avatars (Nov 27)
+
+Nine live-avatar ideas, rated on the site under the new **Live avatar** category. A live avatar is a character that speaks and reacts in real time (voice, lip sync, face tracking or event-driven animation).
+
+| Idea | One line | Fit |
+|---|---|---|
+| **Boo Live** | The morning briefing presented by a live talking ghost that reacts to the night's results and ends with one next step | **Best fit:** upgrades Night Shift's most visible screen; directly answers the "ghost that guides me" judge note |
+| **Kiro Familiar** | A desk-pet ghost that reacts to Kiro hook events (tests pass, gate fails, agent waiting) | **Most Kiro-native:** hooks are the input; small and fun |
+| **Avatar Bones** | Skeleton Crew template: input adapters to a rig to outputs, with two apps | Alternative Skeleton Crew entry (pivot, not recommended now) |
+| **Séance Standup** | Each Crew bot reports in as an avatar | Night Shift extension |
+| **Lab Ghost Tutor** | Avatar tutor for the build labs, grounded only in lab text | Learner resource ("outlives the hackathon") |
+| **Ghost Pair** | In-browser ghost face filter for streaming and pairing | Costume Contest |
+| **Retro Anchor** | Original 80s-style newsreader avatar reading Teletext pages | Resurrection |
+| **Puppet Master** | Face tracking + MIDI + LLM voice drive a live puppet | Frankenstein |
+| **Haunted Mirror** | Party kiosk ghoul mirror | Costume Contest |
+
+**Building blocks to evaluate (verify versions and licences before use):** in-browser face landmark tracking (for example MediaPipe Face Landmarker), 2D SVG or 3D rigs (for example three.js with VRM models), browser speech synthesis with boundary events for simple mouth movement, or a TTS service that returns viseme timings for accurate lip sync, and an offline lip-sync tool for pre-rendered clips.
+
+**Guardrails for any avatar idea**
+- **Never imitate a real person** (no likeness or voice cloning of real people, living or dead), and use original character designs, not trademarked characters.
+- Face and voice data stay on the device unless the user explicitly opts in; nothing is recorded by default.
+- Always disclose that the avatar is AI-driven; captions on by default; respect `prefers-reduced-motion`.
+
+**Recommendation with 7 days left:** keep Night Shift. Add **Boo Live** as the briefing screen (about 1 day, design and demo payoff) and **Kiro Familiar** only if hooks are already working (half a day). Both are small enough not to endanger the two required apps.

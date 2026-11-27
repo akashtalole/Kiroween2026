@@ -4,7 +4,7 @@
   var page = document.body.getAttribute("data-page") || "";
   var TIPS = {
     home: ["Boo! Didn't mean to scare you. Start here, it takes 30 minutes.", "Start Lab 01", "lab.html?id=01-setup-smoke-test"],
-    ideas: ["45 ideas and only one of you. Filter to 'Chosen' to see what we're building.", "Show the chosen ideas", "ideas.html?status=Chosen"],
+    ideas: ["So many ideas and only one of you. Filter to 'Chosen' to see what we're building.", "Show the chosen ideas", "ideas.html?status=Chosen"],
     labs: ["Do them in order. Skipping Lab 01 is how ghosts are made.", "Open Lab 01", "lab.html?id=01-setup-smoke-test"],
     doc: ["Long read? The table of contents on the right is your lantern. Or take the short way:", "See the 2-minute overview", "index.html#categories"]
   };
