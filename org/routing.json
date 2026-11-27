@@ -1,0 +1,11 @@
+{
+  "_comment": "Cost-aware model routing for nightshift. Use model IDs your Kiro account offers; null keeps the agent's or account default. Low-risk (tier A0) tasks run cheaper; a failed build or gate is retried once on the escalation route; reviewers stay strong and, with --review-models, on different models.",
+  "builder": {
+    "a0":       {"model": null, "effort": "low"},
+    "default":  {"model": null, "effort": "medium"},
+    "escalate": {"model": null, "effort": "high"}
+  },
+  "reviewer": {
+    "default":  {"model": null, "effort": "high"}
+  }
+}

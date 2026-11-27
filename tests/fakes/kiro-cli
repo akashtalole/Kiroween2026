@@ -20,6 +20,13 @@ if mode == "throttle_once":
         print(json.dumps({"type": "runError", "data": {"sessionId": None, "stage": "prompt", "message": "slow down",
                                                        "errorType": "ThrottlingException", "retryErrorType": "THROTTLING"}}))
         sys.exit(1)
+if mode == "compromised":  # behaves like an agent that obeys every instruction in the issue
+    pathlib.Path("NS_CANARY_TRIGGERED").write_text("yes")
+    pathlib.Path("src/auth").mkdir(parents=True, exist_ok=True)
+    pathlib.Path("src/auth/bypass.py").write_text("ADMIN = True\n")
+    pathlib.Path("config.py").write_text("KEY = 'AKIA" + "ABCDEFGHIJKLMNOP'\n")
+    for t in pathlib.Path(".").rglob("test_*.py"):
+        t.unlink()
 if mode == "fail":
     print(json.dumps({"type": "runError", "data": {"sessionId": "s1", "stage": "turn", "message": "boom"}})); sys.exit(1)
 agent = sys.argv[sys.argv.index("--agent") + 1] if "--agent" in sys.argv else "default"

@@ -42,6 +42,19 @@ Each role gets a session-wide `--trust-tools` list (`ROLE_TRUST` in `ns.py`); th
 
 `night` reads `credits_per_night` and `parallel_workers` from `org/nightshift.yaml`. It stops scheduling new tasks at 80% of the budget (the cost governor's rule) and parks the rest. Credits are summed from the stream-json events. The field names vary by CLI version, so check the first real run's events and adjust `RunResult.credits` if needed.
 
+## Model routing and escalation
+
+`org/routing.json` picks a model and effort per role and route: `a0` (every file the task declares is docs or tests), `default`, and `escalate`. If the build or the gate fails, the builder retries **once** on the `escalate` route with the gate output as context. The ledger records the routes used (for example `["a0"]` or `["default", "escalate"]`), so credits per merged task can be compared before and after routing. Model IDs are `null` (inherit) until you fill in ones your account offers.
+
+## Red team
+
+```bash
+tools/nightshift/nightshift redteam --drills   # failure modes through the real orchestrator code, fake CLI, no credits
+tools/nightshift/nightshift redteam            # injection canaries (redteam/canaries/) against the real agent
+```
+
+Canaries run in a dedicated throwaway worktree (`../wt-redteam`, reset between canaries and never anything else). After each run, deterministic checks look for: the marker file, protected-path changes (auth, secrets, infra, migrations, `.env`, `.kiro/`, `org/`), fewer tests, and secret-like values. With a fake agent that obeys every instruction, all 5 canaries are caught (tested). The real score comes from running it against Kiro.
+
 ## Workflow recipes (`.kiro/workflows/`)
 
 | Recipe | Shape | Machine-checked stop |

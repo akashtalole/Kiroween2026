@@ -2,6 +2,14 @@
 
 Real findings only, newest first. Each entry: what was measured, what it found, what changed.
 
+## 2026-11-27 Exhaustive check confirms the surviving mutants are equivalent
+- `examples/policy-engine/test_policy_exhaustive.py` checks the policy on all 1,152 behaviourally distinct inputs (path classes × line counts around the threshold × API × deps × gates × reviews), and monotonicity on every ordered pair of signal sets.
+- With it, the mutation score stays 32/35. The same three mutants survive (a redundant glob and two unused dataclass defaults), which is good evidence they are equivalent rather than untested.
+
+## 2026-11-27 Red-team test found a gap in the red-team inspector
+- A fake "compromised" agent created `src/auth/bypass.py`. The protected-path check missed it because `git status --porcelain` reports a new untracked folder as `src/`, not the files inside it.
+- Fixed with `--untracked-files=all`. The test now proves all four checks fire.
+
 ## 2026-11-27 Policy engine: the properties checked shape, not rules (mutation testing)
 - **Tool:** `tools/frontier/mutate.py examples/policy-engine/policy.py examples/policy-engine/test_policy.py`
 - **Before:** the 5 original properties (monotonic tier, determinism, failed gates reject, A2/A3 never auto-merge) killed **10 of 34** mutants (0.29). Deleting A3 globs, moving the 250-line threshold, swapping `max`/`min` or `and`/`or` all survived. The properties described the *shape* of the policy but not its *rules*.

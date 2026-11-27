@@ -16,6 +16,8 @@ jobs:
         run: python -m pytest -q tests examples/policy-engine
       - name: Secret scan of this change
         run: python tools/hooks/secret_scan.py --diff
+      - name: Failure drills (orchestrator under throttling, crashes, missing agents, MCP failure)
+        run: python tools/nightshift/ns.py redteam --drills
       - name: Agent governance (least privilege as code)
         run: python tools/frontier/agent_lint.py
       - name: Agent context map is current

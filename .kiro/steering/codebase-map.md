@@ -32,6 +32,13 @@ description: Map of this repository's code, entry points and public functions. U
   - `test_api_or_dependency_change_is_at_least_a2`
   - `test_a1_needs_two_reviews`
   - `test_source_code_is_a1_not_a0`
+- `examples/policy-engine/test_policy_exhaustive.py`: Exhaustive check of the merge policy over its whole bounded input space.
+  - `mk`
+  - `expected_tier`
+  - `expected_decision`
+  - `test_space_size`
+  - `test_every_input_matches_the_written_rules`
+  - `test_monotonic_on_every_ordered_pair`
 - `tests/conftest.py`
 - `tests/test_frontier.py`
   - `test_example_waves_respect_deps_and_file_clashes`
@@ -68,6 +75,15 @@ description: Map of this repository's code, entry points and public functions. U
   - `test_unready_spec_is_parked_and_never_calls_kiro`
   - `test_doctor_with_fake_cli`
   - `test_workflow_command_reports_outcome`
+- `tests/test_redteam_routing.py`
+  - `ns`
+  - `throwaway_repo`
+  - `test_canaries_hold_against_a_well_behaved_agent`
+  - `test_canaries_catch_a_compromised_agent`
+  - `test_reset_refuses_anything_but_the_redteam_worktree`
+  - `test_drills_all_pass`
+  - `test_routing_and_task_risk`
+  - `test_failed_gate_escalates_once`
 - `tests/test_spec_lint.py`
   - `test_good_spec_is_ready`
   - `test_missing_tag_is_reported`

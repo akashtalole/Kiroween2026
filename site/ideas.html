@@ -31,7 +31,7 @@
   var state = { cat: params.get("category") || "", status: params.get("status") || "", q: "", sort: "score" }, data;
   var grid = document.getElementById("grid"), count = document.getElementById("count");
   function meter(label, v, risk) { return "<span>" + label + '</span><i class="' + (risk ? "risk" : "") + '" style="--w:' + (v * 20) + '%" role="img" aria-label="' + label + " " + v + ' of 5"></i>'; }
-  function statusChip(s) { return '<span class="chip ' + (s === "Chosen" ? "ok" : s === "Fallback" ? "warn" : s === "Roadmap" ? "violet" : "") + '">' + s + "</span>"; }
+  function statusChip(s) { return '<span class="chip ' + (s === "Chosen" || s === "Built" ? "ok" : s === "Fallback" ? "warn" : s === "Roadmap" ? "violet" : "") + '">' + s + "</span>"; }
   function pills(el, items, key) {
     el.innerHTML = '<button class="pill" data-v="" aria-pressed="' + (state[key] === "") + '">All</button>' + items.map(function (i) { return '<button class="pill" data-v="' + N.esc(i) + '" aria-pressed="' + (state[key] === i) + '">' + N.esc(i) + "</button>"; }).join("");
     el.onclick = function (e) { var b = e.target.closest("button"); if (!b) return; state[key] = b.getAttribute("data-v"); pills(el, items, key); draw(); };

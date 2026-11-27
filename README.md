@@ -49,6 +49,9 @@ Night Shift maps Kiro's five frontier-team practices to things you can run:
 - **Proof strength:** mutation testing enforces a CI floor. It took the merge policy's tests from 0.29 to 0.91 and found a real bug.
 - **Agent context:** a generated codebase map keeps it current.
 - **Power:** a `night-shift` Kiro power packages all of this.
+- **Exhaustive check:** the merge policy is verified on all 1,152 distinct inputs.
+- **Model routing:** cheaper models handle tier A0 work, and a failed build retries once on a stronger route.
+- **Red team:** `nightshift redteam` runs injection canaries and failure drills.
 
 See [`docs/FRONTIER_TEAM.md`](docs/FRONTIER_TEAM.md).
 

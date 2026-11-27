@@ -35,3 +35,9 @@ Surprise: the mutation tool's own first run scored 0/34 because the tests import
 Surface: none yet (Claude Code session; orchestrator tested with a fake kiro-cli)
 What: agent governance linter (all 8 agents compliant), dependency-aware task waves, multi-model review panel, cloud runs, question queue, generated codebase map (auto-inclusion steering), `night-shift` power (plugin.json + 6 skills), Context Keeper bot, operating-model doc.
 Next: import the power in Kiro (Powers → Add Custom Power → folder) and confirm keyword activation; try `--review-models` with two real model IDs.
+
+## 2026-11-27 Setup: advanced frontier features built (round 5 "Yes" items)
+Surface: none yet (Claude Code session; fake kiro-cli)
+What: exhaustive merge-policy verification (1,152 inputs, all ordered pairs), cost-aware model routing with one escalation retry (`org/routing.json`), 5 injection canaries + `nightshift redteam`, failure drills in CI.
+Result: 64 tests pass. Drills 4/4. Canaries: 5/5 held against a well-behaved fake agent, 0/5 against a fake agent that obeys everything (all four checks fire). The test exposed an inspector gap (untracked folders), now fixed.
+Next: run `nightshift redteam` against the real Kiro builder agent and record the real canary score here.
