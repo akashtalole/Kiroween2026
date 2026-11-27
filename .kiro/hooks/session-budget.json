@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Tonight's credit budget",
+      "description": "Puts the remaining credit budget for tonight into the agent's context at session start.",
+      "trigger": "SessionStart",
+      "action": { "type": "command", "command": "python3 tools/hooks/session_budget.py" },
+      "timeout": 10
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Ledger on spec task done",
+      "description": "Appends a task_done event when a spec task finishes. VERIFY the trigger identifier for 'Post Task Execution' on the Hook types page, then set enabled to true.",
+      "trigger": "PostTaskExecution",
+      "enabled": false,
+      "action": { "type": "command", "command": "python3 tools/hooks/ledger.py task_done" },
+      "timeout": 5
+    }
+  ]
+}

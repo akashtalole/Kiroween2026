@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Quick gate when the agent stops",
+      "description": "Lints changed specs with the Spec Gate and runs fast tests at the end of each agent turn, so the agent self-corrects before a human sees the work.",
+      "trigger": "Stop",
+      "action": { "type": "command", "command": "python3 tools/hooks/quick_gate.py" },
+      "timeout": 180
+    }
+  ]
+}

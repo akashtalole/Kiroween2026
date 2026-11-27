@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Fast tests on save",
+      "description": "Runs the fast test suites when the agent saves Python code; failures go back to the agent.",
+      "trigger": "PostFileSave",
+      "matcher": "\\.py$",
+      "action": { "type": "command", "command": "python3 tools/hooks/quick_gate.py --tests-only" },
+      "timeout": 120
+    }
+  ]
+}

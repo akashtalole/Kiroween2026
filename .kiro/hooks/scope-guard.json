@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Scope guard",
+      "description": "Blocks agent writes to human-only paths (auth, secrets, infra, migrations, .env, org config). Tier A3 work always waits for a human.",
+      "trigger": "PreToolUse",
+      "matcher": "write",
+      "action": { "type": "command", "command": "python3 tools/hooks/scope_guard.py" },
+      "timeout": 10
+    }
+  ]
+}
