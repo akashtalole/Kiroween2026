@@ -1,0 +1,40 @@
+# The night shift in CI: drain spec-ready backlog items headlessly. Manual by default; uncomment the schedule to automate.
+# Results (evidence/, ledger.ndjson) are uploaded as an artifact; nothing is pushed or merged by this job.
+name: Kiro night shift
+on:
+  workflow_dispatch:
+    inputs:
+      limit: { description: "Max tasks tonight", default: "2" }
+  # schedule:
+  #   - cron: "13 22 * * *"
+permissions:
+  contents: read
+jobs:
+  night:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      KIRO_API_KEY: ${{ secrets.KIRO_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Require a Kiro key
+        if: env.KIRO_API_KEY == ''
+        run: echo "KIRO_API_KEY not set" && exit 1
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "hypothesis==6.*" "pytest==8.*"
+      - run: curl -fsSL https://cli.kiro.dev/install | bash && echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: python3 tools/nightshift/ns.py doctor
+      - name: Night run
+        run: python3 tools/nightshift/ns.py night --limit "${{ inputs.limit || '2' }}"
+      - name: Human Touch Index
+        if: always()
+        run: python3 .kiro/skills/touch-index/scripts/touch_index.py ledger.ndjson >> "$GITHUB_STEP_SUMMARY" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: night-evidence
+          path: |
+            evidence/
+            ledger.ndjson

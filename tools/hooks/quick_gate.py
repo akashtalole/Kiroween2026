@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Stop / PostFileSave hook: lint changed specs and run the fast test suites. Non-zero exit sends stderr to the agent."""
+import json
 import subprocess
 import sys
 
@@ -21,6 +22,10 @@ def main(argv: list[str]) -> int:
     code, out = run([sys.executable, "-m", "pytest", "-q", "-x", "--no-header", "tests", "examples/policy-engine"])
     if code not in (0, 5):  # 5 = no tests collected
         problems.append("Tests failed:\n" + out)
+    if "--json-out" in argv:
+        out = argv[argv.index("--json-out") + 1]
+        with open(out, "w", encoding="utf-8") as f:
+            json.dump({"verdict": "FAIL" if problems else "PASS", "problems": problems}, f, indent=2)
     if problems:
         print("\n".join(problems), file=sys.stderr)
         return 2

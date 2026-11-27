@@ -17,3 +17,9 @@ Result: <one paragraph>
 Evidence: <paths / links>
 Surprise: <what you did not expect>
 -->
+
+## 2026-11-27 Setup: Kiro CLI automation drafted
+Surface: none yet (drafted outside Kiro, in a Claude Code session; tested against a fake kiro-cli only)
+What: `tools/nightshift` orchestrator (headless stream-json runs, throttling backoff, exit-code handling, worktrees, independent review, policy decision, evidence, ledger), 3 workflow recipes, CI review and nightly jobs.
+Test: 36 tests pass; an end-to-end `night` run with the fake CLI parked a vague spec and took a ready one to `merge` (A1) with evidence and ledger events.
+Next: run `nightshift doctor` and one real `nightshift run --in-place` with the real Kiro CLI; record the real stream-json event fields and credits here.

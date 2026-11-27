@@ -1,0 +1,18 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "hypothesis==6.*" "pytest==8.*" pyyaml
+      - name: Tests (hooks, skills, orchestrator with a fake kiro-cli, policy engine)
+        run: python -m pytest -q tests examples/policy-engine
+      - name: Secret scan of this change
+        run: python tools/hooks/secret_scan.py --diff

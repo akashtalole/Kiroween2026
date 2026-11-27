@@ -34,6 +34,10 @@ Everything Kiro produced lives in [`/.kiro`](.kiro) at the repo root.
 - **`apps/lazarus`** (Resurrection): a 2003-style Perl CGI bulletin board, specified from its real behaviour, rewritten by agents, proven equivalent with differential tests.
 - **`apps/chimera`** (Frankenstein): a spreadsheet whose cells are formulas, shell pipelines or HTTP calls, built from one paragraph of intent.
 
+## Automation (Kiro CLI)
+
+`tools/nightshift/nightshift` drives Kiro CLI headlessly. `night` runs spec-ready tasks in parallel git worktrees under a credit budget. Each task gets a fresh independent review, a deterministic merge decision and an evidence file. Throttled runs are retried with backoff. Workflow recipes live in `.kiro/workflows/`, and CI runs a Kiro review on every PR. See [`docs/AUTOMATION.md`](docs/AUTOMATION.md).
+
 ## Try it
 
 - 🌐 **Site, ideas and build labs:** https://akashtalole.github.io/Kiroween2026/ (after Pages is enabled)

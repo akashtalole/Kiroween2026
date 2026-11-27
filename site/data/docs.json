@@ -13,6 +13,12 @@
    "summary": "How every Kiro feature is used, surface constraints, experiments E1 to E8, evidence discipline."
   },
   {
+   "id": "automation",
+   "title": "Kiro CLI automation",
+   "file": "AUTOMATION.md",
+   "summary": "The nightshift command, headless runs, retries, workflow recipes and CI."
+  },
+  {
    "id": "writeup",
    "title": "Write-up template",
    "file": "WRITEUP.md",
