@@ -5,7 +5,7 @@ from fnmatch import fnmatch
 TIERS = ["A0", "A1", "A2", "A3"]  # A0 = safest
 
 A3_PATHS = ["**/auth/**", "**/secrets/**", "infra/**", "**/migrations/**"]
-A0_PATHS = ["docs/**", "**/*.md", "tests/**", "**/test_*.py"]
+A0_PATHS = ["docs/**", "*.md", "**/*.md", "tests/**", "**/test_*.py"]  # "*.md" also covers root files like README.md
 
 @dataclass(frozen=True)
 class Change:

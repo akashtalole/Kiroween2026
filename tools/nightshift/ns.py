@@ -8,6 +8,9 @@ Subcommands
   review [--base REF]        headless read-only review of a diff; non-zero exit on request-changes
   triage <logfile>           explain a failing build from its log (log piped on stdin, read-only tools)
   workflow <name> [k=v ...]  run a saved .kiro/workflows recipe headlessly and wait for it to settle
+  plan <capability>          show dependency-aware waves of unfinished tasks (parallel-safe, no file clashes)
+  questions [--accept-defaults]  list open spec questions; optionally accept every recommended default
+  cloud <capability> --repo owner/name  run the next task in a Kiro cloud session that opens a PR (never merges)
 
 Everything Kiro does goes through `kiro-cli chat --v3 --no-interactive --output-format stream-json`.
 Exit codes from kiro-cli: 0 ok, 1 failure, 3 required MCP server failed, 4 agent or mode not available.
@@ -23,13 +26,14 @@ import json
 import os
 import pathlib
 import re
-import shlex
 import subprocess
 import sys
 import threading
 import time
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools" / "frontier"))
+import task_dag  # noqa: E402
 KIRO = os.environ.get("NS_KIRO_BIN", "kiro-cli")
 LEDGER = pathlib.Path(os.environ.get("NS_LEDGER", ROOT / "ledger.ndjson"))
 EVIDENCE = ROOT / "evidence"
@@ -95,7 +99,8 @@ def ledger(event: dict) -> None:
 
 
 def build_cmd(agent: str | None, *, trust: str | None = None, sandbox: bool = False, require_mcp: bool = False,
-              model: str | None = None, effort: str | None = None, resume_id: str | None = None) -> list[str]:
+              model: str | None = None, effort: str | None = None, resume_id: str | None = None,
+              cloud: bool = False, repo: str | None = None) -> list[str]:
     cmd = [KIRO, "chat", "--v3", "--no-interactive", "--output-format", "stream-json"]
     if agent:
         cmd += ["--agent", agent]
@@ -111,6 +116,10 @@ def build_cmd(agent: str | None, *, trust: str | None = None, sandbox: bool = Fa
         cmd += ["--effort", effort]
     if resume_id:
         cmd += ["--resume-id", resume_id]
+    if cloud:
+        cmd.append("--cloud")
+        if repo:
+            cmd += ["--repo", repo]
     return cmd
 
 
@@ -217,34 +226,62 @@ def _which(name: str) -> bool:
     return any((pathlib.Path(d) / name).exists() for d in os.environ.get("PATH", "").split(os.pathsep)) or os.path.exists(name)
 
 
+def next_task(cap: str, root: pathlib.Path = ROOT) -> int | None:
+    """Lowest-numbered unfinished task whose dependencies are done (see tools/frontier/task_dag.py)."""
+    f = root / ".kiro" / "specs" / cap / "tasks.md"
+    ready = task_dag.next_ready(task_dag.parse(f.read_text(encoding="utf-8"))) if f.exists() else []
+    return ready[0] if ready else None
+
+
+def review_panel(prompt: str, models: list | None, *, cwd: pathlib.Path = ROOT, retries: int = 3, sleep=time.sleep,
+                 env: dict | None = None) -> dict:
+    """Independent reviews in parallel, one fresh read-only session per model. Approve only if every reviewer approves.
+
+    Frontier teams use reviewers on different models so their findings are independent in more than name.
+    """
+    models = models or [None]
+    with cf.ThreadPoolExecutor(max_workers=len(models)) as pool:
+        runs = list(pool.map(lambda m: run_kiro(prompt, "reviewer", cwd=cwd, retries=retries, sleep=sleep, env=env, model=m), models))
+    verdicts = [verdict_of(r.text) for r in runs]
+    return {"verdict": "approve" if all(v == "approve" for v in verdicts) else "request-changes",
+            "verdicts": dict(zip([m or "default" for m in models], verdicts)),
+            "text": "\n\n---\n\n".join(f"### Reviewer ({m or 'default'})\n{r.text}" for m, r in zip(models, runs)),
+            "credits": sum(r.credits for r in runs), "attempts": sum(r.attempts for r in runs),
+            "seconds": max(r.seconds for r in runs)}
+
+
 def run_capability(cap: str, *, use_worktree: bool = True, sandbox: bool = False, retries: int = 3,
-                   sleep=time.sleep) -> dict:
+                   sleep=time.sleep, review_models: list | None = None) -> dict:
     """One task, end to end. Returns a summary dict (also written to the ledger and evidence/)."""
     if not spec_ready(cap):
         ledger({"type": "parked", "task": cap, "reason": "spec not ready (Spec Gate)"})
         return {"task": cap, "status": "parked", "reason": "spec not ready"}
+    task_no = next_task(cap)
+    if task_no is None:
+        ledger({"type": "nothing_to_do", "task": cap})
+        return {"task": cap, "status": "done", "reason": "no unfinished task with satisfied dependencies"}
     cwd = make_worktree(cap) if use_worktree else ROOT
     env = {"NS_TASK": cap, "NS_LEDGER": str(LEDGER)}
-    ledger({"type": "task_start", "task": cap})
-    build = run_kiro(f"Implement the next unchecked task in .kiro/specs/{cap}/tasks.md. Follow your role exactly. "
+    ledger({"type": "task_start", "task": cap, "task_no": task_no})
+    build = run_kiro(f"Implement task {task_no} (and only task {task_no}) in .kiro/specs/{cap}/tasks.md. Follow your role exactly. "
                      "Stop when the tests are green or after 3 failed attempts, and say which.",
                      "builder", cwd=cwd, retries=retries, sleep=sleep, sandbox=sandbox, env=env)
     gate_file = EVIDENCE / f"{cap}.gate.json"
     EVIDENCE.mkdir(exist_ok=True)
     gates_passed = sh([sys.executable, "tools/hooks/quick_gate.py", "--json-out", str(gate_file)], cwd=cwd).returncode == 0
     diff = sh(["git", "diff", "HEAD~1"], cwd=cwd).stdout[-60000:]
-    review = run_kiro("You are reviewing a change you did not write. Requirements: "
-                      f".kiro/specs/{cap}/requirements.md. Start your answer with 'Verdict: approve' or "
-                      f"'Verdict: request-changes'.\n\n```diff\n{diff}\n```", "reviewer", cwd=cwd,
-                      retries=retries, sleep=sleep, env=env)
-    verdict = verdict_of(review.text)
+    review = review_panel("You are reviewing a change you did not write. Requirements: "
+                          f".kiro/specs/{cap}/requirements.md. Start your answer with 'Verdict: approve' or "
+                          f"'Verdict: request-changes'.\n\n```diff\n{diff}\n```", review_models, cwd=cwd,
+                          retries=retries, sleep=sleep, env=env)
+    verdict = review["verdict"]
     decision = policy(cwd, gates_passed and build.ok, 2 if verdict == "approve" else 0)
-    credits = build.credits + review.credits
-    summary = {"task": cap, "status": decision.get("decision"), "tier": decision.get("tier"),
+    credits = build.credits + review["credits"]
+    summary = {"task": cap, "task_no": task_no, "reviewers": review["verdicts"], "status": decision.get("decision"), "tier": decision.get("tier"),
                "build_exit": build.exit_code, "build_error": build.error, "gates_passed": gates_passed,
                "review": verdict, "signals": decision.get("signals", []), "credits": credits,
-               "attempts": build.attempts + review.attempts, "seconds": build.seconds + review.seconds}
-    (EVIDENCE / f"{cap}.md").write_text(_evidence_md(summary, review.text), encoding="utf-8")
+               "attempts": build.attempts + review["attempts"], "seconds": build.seconds + review["seconds"]}
+    (EVIDENCE / f"{cap}.md").write_text(_evidence_md(summary, review["text"]), encoding="utf-8")
     ledger({"type": "task_done", "task": cap, "merged": decision.get("decision") == "merge",
             "retries": max(0, build.attempts - 1), "credits": credits, "tier": decision.get("tier")})
     return summary
@@ -259,7 +296,8 @@ def _evidence_md(s: dict, review_text: str) -> str:
 
 
 def cmd_run(a) -> int:
-    s = run_capability(a.capability, use_worktree=not a.in_place, sandbox=a.sandbox, retries=a.retries)
+    s = run_capability(a.capability, use_worktree=not a.in_place, sandbox=a.sandbox, retries=a.retries,
+                       review_models=_models(a))
     print(json.dumps(s, indent=2, default=str))
     return 0 if s["status"] in ("merge", "queue_for_human") else 1
 
@@ -286,7 +324,8 @@ def cmd_night(a) -> int:
             if spent >= budget * 0.8:  # the cost governor's 80% rule
                 ledger({"type": "parked", "task": cap, "reason": "night budget at 80%"})
                 continue
-            pending[pool.submit(run_capability, cap, use_worktree=not a.in_place, sandbox=a.sandbox)] = cap
+            pending[pool.submit(run_capability, cap, use_worktree=not a.in_place, sandbox=a.sandbox,
+                                 review_models=_models(a))] = cap
         for fut in cf.as_completed(pending):
             try:
                 r = fut.result()
@@ -303,18 +342,18 @@ def cmd_review(a) -> int:
     diff = sh(["git", "diff", a.base]).stdout
     if not diff.strip():
         print("Nothing to review."); return 0
-    r = run_kiro("Review this diff against .kiro/steering. Start with 'Verdict: approve' or 'Verdict: request-changes', "
-                 f"then list findings as file:line, problem, fix.\n\n```diff\n{diff[-60000:]}\n```", "reviewer",
-                 retries=a.retries)
+    r = review_panel("Review this diff against .kiro/steering. Start with 'Verdict: approve' or 'Verdict: request-changes', "
+                     f"then list findings as file:line, problem, fix.\n\n```diff\n{diff[-60000:]}\n```", _models(a),
+                     retries=a.retries)
     EVIDENCE.mkdir(exist_ok=True)
     head = sh(["git", "rev-parse", "--short", "HEAD"]).stdout.strip() or "worktree"
     out = EVIDENCE / f"review-{head}.md"
-    out.write_text(r.text, encoding="utf-8")
-    v = verdict_of(r.text)
-    print(f"Review verdict: {v} (full text in {out.relative_to(ROOT)})")
+    out.write_text(r["text"], encoding="utf-8")
+    v = r["verdict"]
+    print(f"Review verdict: {v} {r['verdicts']} (full text in {out.relative_to(ROOT)})")
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
-            f.write(f"## Kiro review: {v}\n\n{r.text[:20000]}\n")
+            f.write(f"## Kiro review: {v}\n\n{r['text'][:20000]}\n")
     return 0 if v == "approve" else 2
 
 
@@ -338,6 +377,59 @@ def cmd_workflow(a) -> int:
     return 0 if outcome == "completed" else 1
 
 
+def _models(a) -> list | None:
+    return [m.strip() for m in a.review_models.split(",") if m.strip()] if getattr(a, "review_models", None) else None
+
+
+def cmd_plan(a) -> int:
+    f = ROOT / ".kiro" / "specs" / a.capability / "tasks.md"
+    if not f.exists():
+        print(f"No tasks.md for {a.capability}"); return 1
+    return task_dag.main(["task_dag", str(f)])
+
+
+QUESTION = re.compile(r"^(\s*[-*]\s+)(.*?recommended default:\s*)(.+)$", re.I)
+
+
+def cmd_questions(a) -> int:
+    """The question queue: agents park ambiguity with a recommended default instead of guessing."""
+    found = 0
+    for req in sorted((ROOT / ".kiro" / "specs").glob("*/requirements.md")):
+        lines, changed, in_q = req.read_text(encoding="utf-8").splitlines(), False, False
+        for i, line in enumerate(lines):
+            if re.match(r"^#{2,3}\s+Open questions", line, re.I):
+                in_q = True; continue
+            if in_q and line.startswith("#"):
+                in_q = False
+            m = QUESTION.match(line) if in_q else None
+            if not m or "decision:" in line.lower():
+                continue
+            found += 1
+            print(f"{req.parent.name}: {m.group(2).split('Recommended')[0].strip()}  -> default: {m.group(3).strip()}")
+            if a.accept_defaults:
+                lines[i] = f"{line} Decision: default accepted {time.strftime('%Y-%m-%d')}."
+                changed = True
+                ledger({"type": "human_approval", "task": req.parent.name, "seconds": 0, "what": "accepted default"})
+        if changed:
+            req.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"{found} open question(s)" + (" accepted with their defaults" if a.accept_defaults and found else ""))
+    return 0
+
+
+def cmd_cloud(a) -> int:
+    """Kiro Web cloud session: works while your laptop sleeps, opens a PR, never merges."""
+    task_no = next_task(a.capability)
+    if task_no is None or not spec_ready(a.capability):
+        print("Nothing ready to run (spec not ready or no unblocked task)."); return 1
+    r = run_kiro(f"In repository {a.repo}, implement task {task_no} of .kiro/specs/{a.capability}/tasks.md on a new "
+                 f"branch ns/{a.capability}-{task_no}, run the tests, and open a pull request whose description is the "
+                 "evidence pack from .kiro/skills/evidence-pack. Do not merge.", None, cloud=True, repo=a.repo,
+                 trust=a.trust, retries=a.retries)
+    ledger({"type": "cloud_task", "task": a.capability, "task_no": task_no, "exit": r.exit_code, "credits": r.credits})
+    print(r.text[-3000:] or f"exit {r.exit_code} {r.error}")
+    return 0 if r.ok else 1
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="nightshift", description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -345,11 +437,18 @@ def main(argv=None) -> int:
     r = sub.add_parser("run"); r.add_argument("capability")
     n = sub.add_parser("night"); n.add_argument("--workers", type=int); n.add_argument("--limit", type=int)
     for p in (r, n):
+        p.add_argument("--review-models", help="comma-separated model IDs for independent parallel reviewers")
         p.add_argument("--in-place", action="store_true", help="no worktree (tests, quick experiments)")
         p.add_argument("--sandbox", action="store_true", help="require the local command sandbox")
         p.add_argument("--retries", type=int, default=3)
     r.set_defaults(fn=cmd_run); n.set_defaults(fn=cmd_night)
     v = sub.add_parser("review"); v.add_argument("--base", default="origin/main"); v.add_argument("--retries", type=int, default=3)
+    v.add_argument("--review-models", help="comma-separated model IDs; approve only if all approve")
+    pl = sub.add_parser("plan"); pl.add_argument("capability"); pl.set_defaults(fn=cmd_plan)
+    q = sub.add_parser("questions"); q.add_argument("--accept-defaults", action="store_true"); q.set_defaults(fn=cmd_questions)
+    c = sub.add_parser("cloud"); c.add_argument("capability"); c.add_argument("--repo", required=True)
+    c.add_argument("--trust", default="read,write,shell,grep,glob"); c.add_argument("--retries", type=int, default=2)
+    c.set_defaults(fn=cmd_cloud)
     v.set_defaults(fn=cmd_review)
     t = sub.add_parser("triage"); t.add_argument("logfile"); t.add_argument("--retries", type=int, default=3)
     t.set_defaults(fn=cmd_triage)

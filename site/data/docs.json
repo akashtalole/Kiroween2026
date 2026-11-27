@@ -7,6 +7,12 @@
    "summary": "The chosen design: org as code, roles, pipeline, autonomy policy, bots, the two apps, metrics, schedule."
   },
   {
+   "id": "frontier",
+   "title": "Frontier team operating model",
+   "file": "FRONTIER_TEAM.md",
+   "summary": "Five frontier practices mapped to mechanisms and Kiro products, human roles, cadence, autonomy ladder and scoreboard."
+  },
+  {
    "id": "kiro-features",
    "title": "Kiro feature coverage plan",
    "file": "KIRO_FEATURE_PLAN.md",
@@ -41,6 +47,12 @@
    "title": "Master plan and idea bank",
    "file": "PLAN.md",
    "summary": "Rules, scoring, idea banks, decision log and timeline."
+  },
+  {
+   "id": "pbt-catches",
+   "title": "What the tests caught",
+   "file": "pbt-catches.md",
+   "summary": "Real property-based and mutation testing findings."
   }
  ]
 }

@@ -38,6 +38,20 @@ Everything Kiro produced lives in [`/.kiro`](.kiro) at the repo root.
 
 `tools/nightshift/nightshift` drives Kiro CLI headlessly. `night` runs spec-ready tasks in parallel git worktrees under a credit budget. Each task gets a fresh independent review, a deterministic merge decision and an evidence file. Throttled runs are retried with backoff. Workflow recipes live in `.kiro/workflows/`, and CI runs a Kiro review on every PR. See [`docs/AUTOMATION.md`](docs/AUTOMATION.md).
 
+## Frontier team setup
+
+Night Shift maps Kiro's five frontier-team practices to things you can run:
+- **Governance:** least-privilege agents are linted in CI (`tools/frontier/agent_lint.py`).
+- **Parallel work:** dependency-aware waves keep parallel worktrees from touching the same file (`nightshift plan`).
+- **Clearer intent:** a question queue holds open spec questions with recommended defaults.
+- **Independent review:** reviews can run in parallel on different models.
+- **Cloud runs:** Kiro Web cloud runs open PRs and never merge.
+- **Proof strength:** mutation testing enforces a CI floor. It took the merge policy's tests from 0.29 to 0.91 and found a real bug.
+- **Agent context:** a generated codebase map keeps it current.
+- **Power:** a `night-shift` Kiro power packages all of this.
+
+See [`docs/FRONTIER_TEAM.md`](docs/FRONTIER_TEAM.md).
+
 ## Try it
 
 - 🌐 **Site, ideas and build labs:** https://akashtalole.github.io/Kiroween2026/ (after Pages is enabled)

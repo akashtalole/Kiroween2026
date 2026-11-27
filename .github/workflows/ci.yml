@@ -16,3 +16,11 @@ jobs:
         run: python -m pytest -q tests examples/policy-engine
       - name: Secret scan of this change
         run: python tools/hooks/secret_scan.py --diff
+      - name: Agent governance (least privilege as code)
+        run: python tools/frontier/agent_lint.py
+      - name: Agent context map is current
+        run: python tools/frontier/context_map.py --check
+      - name: Proof strength floor for the merge policy (mutation testing)
+        run: |
+          python tools/frontier/mutate.py examples/policy-engine/policy.py examples/policy-engine/test_policy.py --json | tee mutation.json
+          python -c "import json,sys; s=json.load(open('mutation.json'))['score']; print('score',s); sys.exit(0 if s>=0.85 else 1)"

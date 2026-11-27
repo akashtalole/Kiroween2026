@@ -2,7 +2,7 @@
 
 **Goal:** the part that decides "may this merge without a human" must be deterministic code, and heavily tested. Experiment **E7** (planted bugs).
 
-> **Tested:** the code and tests below live in `examples/policy-engine/` in the repo and pass (`5 passed`). Run them yourself:
+> **Tested:** the code below lives in `examples/policy-engine/`. The five properties shown here were the first version; mutation testing (section at the end) showed they were too weak, and the repo now has 13 tests. Run them yourself:
 
 ```bash
 pip install hypothesis pytest
@@ -21,7 +21,7 @@ from fnmatch import fnmatch
 TIERS = ["A0", "A1", "A2", "A3"]  # A0 = safest
 
 A3_PATHS = ["**/auth/**", "**/secrets/**", "infra/**", "**/migrations/**"]
-A0_PATHS = ["docs/**", "**/*.md", "tests/**", "**/test_*.py"]
+A0_PATHS = ["docs/**", "*.md", "**/*.md", "tests/**", "**/test_*.py"]  # "*.md" covers root README.md
 
 @dataclass(frozen=True)
 class Change:
@@ -115,6 +115,14 @@ def test_high_risk_never_auto_merges(c):
 4. Keep a running list of **real** property-test failures during development: the property, the counterexample, the fix. Real catches matter more than planted ones.
 
 Be honest in the write-up: property tests are evidence, not proof, and a weak property will pass while behaviour is still wrong.
+
+## Measuring proof strength (what actually happened)
+
+```bash
+python3 tools/frontier/mutate.py examples/policy-engine/policy.py examples/policy-engine/test_policy.py
+```
+
+The mutation tool plants small bugs (flipped comparisons, swapped `and`/`or`, `max`/`min`, deleted list items, constants +1) and counts how many the tests catch. The five properties above caught **10 of 34**: they checked the *shape* of the policy (monotonic, deterministic) but not its *rules*. Writing the missing rule properties also exposed a real bug: `**/*.md` does not match a root `README.md`. After the fix and eight rule properties: **32 of 35** (the rest are equivalent mutants). Details: `docs/pbt-catches.md`.
 
 ## Checkpoint
 

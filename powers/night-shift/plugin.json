@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "night-shift",
+  "version": "0.1.0",
+  "description": "Frontier-team guardrails for autonomous agents: a Spec Gate for vague requirements, a deterministic merge policy, evidence packs, the Human Touch Index and proof-strength (mutation) scoring.",
+  "author": { "name": "Akash Talole", "url": "https://github.com/akashtalole" },
+  "keywords": ["spec gate", "requirements", "EARS", "merge policy", "auto-merge", "evidence pack", "human touch", "autonomy", "night shift", "mutation testing", "proof strength"],
+  "homepage": "https://akashtalole.github.io/Kiroween2026/",
+  "repository": "https://github.com/akashtalole/Kiroween2026",
+  "license": "MIT"
+}
