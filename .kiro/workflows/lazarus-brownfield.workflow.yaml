@@ -1,0 +1,29 @@
+# Lazarus (Resurrection): specify the legacy app from its real behaviour before anyone rewrites it.
+# Headless: python3 tools/nightshift/ns.py workflow lazarus-brownfield run_id=lz-1
+name: lazarus-brownfield
+description: Investigate the legacy Perl CGI app, write specs for what it actually does, then characterization tests.
+inputs:
+  run_id: string
+steps:
+  - type: step
+    id: investigate
+    agent: wf-planner
+    artifacts:
+      report: ".kiro/workflow-runs/{{run_id}}/legacy-report.md"
+    prompt: >
+      READ-ONLY. Investigate apps/lazarus/legacy: routes, inputs, outputs, storage format, error behaviour, and quirks.
+      Write a cited report to .kiro/workflow-runs/{{run_id}}/legacy-report.md. Finish with send_message severity success.
+  - type: step
+    id: specify
+    agent: analyst
+    artifacts:
+      requirements: ".kiro/specs/lazarus-parity/requirements.md"
+    prompt: >
+      From {{artifacts.report}}, write .kiro/specs/lazarus-parity/requirements.md describing what the legacy app DOES
+      (including quirks we must preserve), tagged [PBT] or [EX]. Run the spec gate and fix every finding.
+  - type: step
+    id: characterize
+    agent: tester
+    prompt: >
+      Write characterization tests in apps/lazarus/tests/ that record the legacy app's behaviour for every requirement in
+      {{artifacts.requirements}}, including property tests that compare legacy and modern responses on generated requests.

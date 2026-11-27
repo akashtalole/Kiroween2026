@@ -17,12 +17,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/ghost.js" defer></script>
 <script>
 (function () {
   var N = window.NS, id = new URLSearchParams(location.search).get("id") || "", el = document.getElementById("content");
   N.getJSON("data/labs.json").then(function (d) {
     var labs = d.labs, i = labs.findIndex(function (l) { return l.slug === id || l.id === id; }), lab = labs[i];
-    if (!lab) { el.innerHTML = '<h1>Lab not found</h1><p><a href="labs.html">Browse all labs →</a></p>'; return; }
+    if (!lab) { el.innerHTML = '<h1>This lab has passed on 👻</h1><p>It isn\'t haunting anywhere we know. <a href="labs.html">See the labs that are still alive →</a></p>'; return; }
     document.title = "Lab " + lab.id + " · " + lab.title;
     document.getElementById("crumbs").innerHTML = '<a href="labs.html">Labs</a> / ' + N.esc(lab.category);
     return fetch("content/labs/" + lab.slug + ".md").then(function (r) { if (!r.ok) throw new Error("lab file " + r.status); return r.text(); }).then(function (md) {
@@ -32,7 +33,7 @@
       var p = labs[i - 1], n = labs[i + 1];
       document.getElementById("pager").innerHTML = (p ? '<a class="prev" href="lab.html?id=' + p.slug + '"><small>← Previous</small>Lab ' + p.id + " · " + N.esc(p.title) + "</a>" : "<span></span>") + (n ? '<a class="next" href="lab.html?id=' + n.slug + '"><small>Next →</small>Lab ' + n.id + " · " + N.esc(n.title) + "</a>" : "");
     });
-  }).catch(function (e) { el.innerHTML = '<p class="note">Could not load this lab: ' + N.esc(e.message) + "</p>"; });
+  }).catch(function (e) { el.innerHTML = '<p class="note">The spirits couldn\'t fetch this lab (check your connection, then reload). Details: ' + N.esc(e.message) + "</p>"; });
 })();
 </script>
 </body>

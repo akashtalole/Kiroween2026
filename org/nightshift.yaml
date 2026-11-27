@@ -1,0 +1,21 @@
+# Night Shift org configuration. Read by tools/ and by the policy-check and session-budget scripts.
+org: night-shift
+budgets:
+  credits_per_night: 400
+  per_task_cap: 60
+gates:
+  required: [spec_clarity, unit, property, secret_scan]
+  optional: [mutation_sample, perf_smoke]
+retries: 3
+parallel_workers: 4
+autonomy:
+  # Tiers can only go up as signals are added (property-tested in examples/policy-engine).
+  A0: {desc: "docs and tests only", auto_merge: true}
+  A1: {desc: "internal code, no API or dependency change", auto_merge: true, reviews_required: 2}
+  A2: {desc: "public API, dependency change, or diff over 250 lines", auto_merge: false, approvals: 1}
+  A3: {desc: "auth, secrets, infra, migrations", auto_merge: false, approvals: 2}
+roles: [analyst, architect, builder, tester, reviewer, security, scribe, release]
+schedules:
+  night_conductor: "22:00 daily"
+  morning_briefing: "07:00 weekdays"
+  pipeline_health: "every 30 minutes"

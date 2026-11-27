@@ -1,0 +1,33 @@
+# Troubleshoot until verified: reproduce, diagnose, patch one cause at a time, rerun the same check. Stops on PASS or after 5 tries.
+# Headless: python3 tools/nightshift/ns.py workflow fix-until-green run_id=$(date +%s)
+name: fix-until-green
+description: Make the fast gate green without changing behaviour; one cause per iteration; machine-checked stop.
+inputs:
+  run_id: string
+steps:
+  - type: step
+    id: reproduce
+    agent: reviewer           # read-only: reproduce by reading the last gate output, never by editing
+    prompt: >
+      Read the most recent failing output (evidence/*.gate.json or run `python3 tools/hooks/quick_gate.py` output if
+      provided in context). Name the first real error and its most likely cause, citing files. Do not edit files.
+  - type: repeat
+    id: fix-loop
+    maxIterations: 5
+    onMaxIterations: abort
+    stopCondition:
+      fileCheck:
+        path: ".kiro/workflow-runs/{{run_id}}/gate.json"
+        jsonPath: verdict
+        value: PASS
+    steps:
+      - type: step
+        id: patch
+        agent: builder
+        prompt: >
+          Fix exactly one cause of the failure described here:
+
+          {{reproduce.output}}
+
+          Never delete, skip or weaken a test. Then run
+          `python3 tools/hooks/quick_gate.py --json-out .kiro/workflow-runs/{{run_id}}/gate.json` and report the result.

@@ -1,0 +1,112 @@
+# Deliver one Night Shift capability: spec gate -> design loop -> code loop with two parallel reviews -> machine-checked gate.
+# Run in CLI:  /workflow run night-feature --task "..." --capability policy-engine --run_id 2026-11-28-a
+# Headless:    python3 tools/nightshift/ns.py workflow night-feature task="..." capability=policy-engine run_id=2026-11-28-a
+# If Kiro reports a step agent is not workflow-capable, swap it for the bundled equivalent noted beside it.
+name: night-feature
+description: Spec-gated feature delivery with independent reviews and a machine-checked final gate.
+inputs:
+  task: prompt
+  capability: string
+  run_id: string
+steps:
+  - type: step
+    id: requirements
+    agent: analyst            # bundled fallback: wf-design
+    artifacts:
+      requirements: ".kiro/specs/{{capability}}/requirements.md"
+    prompt: >
+      Write or update .kiro/specs/{{capability}}/requirements.md for: {{task}}.
+      Use EARS and tag every criterion [PBT] or [EX]. Then run
+      `python3 .kiro/skills/spec-gate/scripts/spec_lint.py .kiro/specs/{{capability}}/requirements.md`
+      and fix every finding. If something cannot be decided without a human, list it under Open questions with a
+      recommended default and call send_message with severity warning. Otherwise finish with severity success.
+
+  - type: repeat
+    id: design-loop
+    maxIterations: 3
+    onMaxIterations: abort
+    stopCondition:
+      fileCheck:
+        path: ".kiro/workflow-runs/{{run_id}}/design-review.json"
+        jsonPath: verdict
+        value: APPROVED
+    steps:
+      - type: step
+        id: design-draft
+        agent: architect      # bundled fallback: wf-design
+        artifacts:
+          design: ".kiro/specs/{{capability}}/design.md"
+          tasks: ".kiro/specs/{{capability}}/tasks.md"
+        prompt: >
+          Read {{artifacts.requirements}}. Write or revise .kiro/specs/{{capability}}/design.md (with a Correctness
+          properties table covering every [PBT] criterion) and .kiro/specs/{{capability}}/tasks.md.
+      - type: step
+        id: design-review
+        agent: wf-design-reviewer
+        artifacts:
+          design_review: ".kiro/workflow-runs/{{run_id}}/design-review.json"
+        prompt: >
+          Review {{artifacts.design}} and {{artifacts.tasks}} against {{artifacts.requirements}}. Write
+          .kiro/workflow-runs/{{run_id}}/design-review.json as {"verdict": "APPROVED" or "REVISE", "findings": [...]}.
+
+  - type: repeat
+    id: code-loop
+    maxIterations: 3
+    onMaxIterations: abort
+    stopCondition:
+      fileCheck:
+        path: ".kiro/workflow-runs/{{run_id}}/code-review.json"
+        jsonPath: verdict
+        value: APPROVED
+    steps:
+      - type: step
+        id: implement
+        agent: builder        # bundled fallback: wf-coder
+        prompt: >
+          Implement the unchecked tasks in {{artifacts.tasks}}, one at a time, with tests (property tests for every
+          [PBT] criterion). Run `python3 tools/hooks/quick_gate.py`. Summarise changed files and test results.
+      - type: parallel
+        id: code-reviews
+        joinPolicy: all
+        branches:
+          - type: step
+            id: review-correctness
+            agent: reviewer   # bundled fallback: semantic_reviewer
+            artifacts:
+              review_a: ".kiro/workflow-runs/{{run_id}}/review-correctness.md"
+            prompt: >
+              Independently review the uncommitted changes against {{artifacts.requirements}}. Write findings to
+              .kiro/workflow-runs/{{run_id}}/review-correctness.md, starting with "Verdict: approve" or "Verdict: request-changes".
+          - type: step
+            id: review-security
+            agent: security
+            artifacts:
+              review_b: ".kiro/workflow-runs/{{run_id}}/review-security.md"
+            prompt: >
+              Security review of the uncommitted changes. Run `python3 tools/hooks/secret_scan.py --diff`. Write findings to
+              .kiro/workflow-runs/{{run_id}}/review-security.md, starting with "Verdict: approve" or "Verdict: request-changes".
+      - type: step
+        id: code-aggregate
+        agent: wf-review-aggregator
+        artifacts:
+          code_review: ".kiro/workflow-runs/{{run_id}}/code-review.json"
+        prompt: >
+          Merge {{artifacts.review_a}} and {{artifacts.review_b}} into .kiro/workflow-runs/{{run_id}}/code-review.json as
+          {"verdict": "APPROVED" or "REVISE", "findings": [...]}. APPROVED only if both start with "Verdict: approve".
+
+  - type: repeat
+    id: validate-gate
+    maxIterations: 1
+    onMaxIterations: abort
+    stopCondition:
+      fileCheck:
+        path: ".kiro/workflow-runs/{{run_id}}/gate.json"
+        jsonPath: verdict
+        value: PASS
+    steps:
+      - type: step
+        id: validate
+        agent: release
+        prompt: >
+          Run `python3 tools/hooks/quick_gate.py --json-out .kiro/workflow-runs/{{run_id}}/gate.json`, then follow the
+          evidence-pack and policy-check skills for task {{capability}}. Never merge or push. Report the policy decision.

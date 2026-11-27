@@ -398,3 +398,75 @@ About 21 days remain until Dec 4 and no idea is locked. The Nov 10 spike gate in
 | Nov 28-Dec 3 | Demo bundles, video, write-up, blog and social posts, submit Dec 3 |
 
 If the engine-heavy ideas (R1, R7, K2) feel too big for three weeks, the lower-effort picks above (R2 Dead Letter Office, R9 Afterlife, K3 Power, S4 Vertebrae) still compete well when the Kiro usage is deep and the demo is clean.
+
+---
+
+## 15. Idea bank, round 3 (Nov 26)
+
+Thirteen more ideas, all rated in `site/data/ideas.json` and browsable on the site. Night Shift remains the chosen project; with 8 days left, treat these as **swappable apps for the skeleton**, extra roadmap slides, or fallbacks, not new projects.
+
+| Group | Ideas |
+|---|---|
+| **Enterprise AI org** (natural extra apps for the Night Shift skeleton) | **Graveyard Shift Ops** (autonomous overnight on-call), **Policy Phantom** (compliance controls to executable checks), **Ticket to Spec** (customer tickets and analytics to ranked specs), **Ossuary** (data-pipeline skeleton with two apps) |
+| **Resurrection, knowledge and data** | **Legacy Whisperer** (undocumented codebase to living wiki and specs), **Paper Revival** (old research code reproduces its published numbers), **Open Data Revenant** (vanished datasets rebuilt from archives with provenance), **Dependency Reaper** (monorepo API migrations), **Executable README** (every doc sample runs) |
+| **Kiro-native tools** | **Spec Drift Watch** (code vs specs), **Hook Harness** (unit-test your hooks), **Flake Exorcist** (flaky-test bot) |
+| **Costume Contest** | **Crypt Briefing UI** (haunted dashboard for Night Shift's morning briefing) |
+
+**How they could help the chosen project**
+- **Legacy Whisperer** maps onto Lazarus's first phase (specs from existing behaviour) and costs almost nothing extra.
+- **Crypt Briefing UI** is the design-score play: Night Shift's morning briefing page is the one screen judges will see, so polishing it helps the Design and Presentation criteria.
+- **Graveyard Shift Ops** would be a third app proving the skeleton's versatility, but only if time is left after the two required apps; the Skeleton Crew rule asks for two.
+- **Hook Harness** and **Spec Drift Watch** fit the write-up's hooks and specs sections as small side-experiments.
+
+**Caution:** none of these has been checked against Kiroween 2025 submissions or existing tools for novelty.
+
+---
+
+## 16. Idea bank, round 4: live avatars (Nov 27)
+
+Nine live-avatar ideas, rated on the site under the new **Live avatar** category. A live avatar is a character that speaks and reacts in real time (voice, lip sync, face tracking or event-driven animation).
+
+| Idea | One line | Fit |
+|---|---|---|
+| **Boo Live** | The morning briefing presented by a live talking ghost that reacts to the night's results and ends with one next step | **Best fit:** upgrades Night Shift's most visible screen; directly answers the "ghost that guides me" judge note |
+| **Kiro Familiar** | A desk-pet ghost that reacts to Kiro hook events (tests pass, gate fails, agent waiting) | **Most Kiro-native:** hooks are the input; small and fun |
+| **Avatar Bones** | Skeleton Crew template: input adapters to a rig to outputs, with two apps | Alternative Skeleton Crew entry (pivot, not recommended now) |
+| **Séance Standup** | Each Crew bot reports in as an avatar | Night Shift extension |
+| **Lab Ghost Tutor** | Avatar tutor for the build labs, grounded only in lab text | Learner resource ("outlives the hackathon") |
+| **Ghost Pair** | In-browser ghost face filter for streaming and pairing | Costume Contest |
+| **Retro Anchor** | Original 80s-style newsreader avatar reading Teletext pages | Resurrection |
+| **Puppet Master** | Face tracking + MIDI + LLM voice drive a live puppet | Frankenstein |
+| **Haunted Mirror** | Party kiosk ghoul mirror | Costume Contest |
+
+**Building blocks to evaluate (verify versions and licences before use):** in-browser face landmark tracking (for example MediaPipe Face Landmarker), 2D SVG or 3D rigs (for example three.js with VRM models), browser speech synthesis with boundary events for simple mouth movement, or a TTS service that returns viseme timings for accurate lip sync, and an offline lip-sync tool for pre-rendered clips.
+
+**Guardrails for any avatar idea**
+- **Never imitate a real person** (no likeness or voice cloning of real people, living or dead), and use original character designs, not trademarked characters.
+- Face and voice data stay on the device unless the user explicitly opts in; nothing is recorded by default.
+- Always disclose that the avatar is AI-driven; captions on by default; respect `prefers-reduced-motion`.
+
+**Recommendation with 7 days left:** keep Night Shift. Add **Boo Live** as the briefing screen (about 1 day, design and demo payoff) and **Kiro Familiar** only if hooks are already working (half a day). Both are small enough not to endanger the two required apps.
+
+---
+
+## 17. Idea bank, round 5: advanced frontier ideas (Nov 27)
+
+Thirteen ideas that push Night Shift's frontier-team layer further. They're on the site under **Frontier (advanced)** and linked to `docs/FRONTIER_TEAM.md`. Ratings are judgment, not data.
+
+| Idea | What it adds | Effort | Fits the last 7 days? |
+|---|---|---|---|
+| **Red Team Night** | Inject faults on purpose (throttling, flaky tests, denied tools, prompt-injection issues) and score whether every guardrail held | low | **Yes.** The fake `kiro-cli` already has fault modes |
+| **Injection canaries** | Seeded malicious issues; any canary that succeeds fails CI | low | **Yes.** It also gives the security story a real number |
+| **Exhaustively verified merge policy** | Check every combination of the policy's bounded input space instead of sampling it | very low | **Yes.** Upgrades "property-tested" to "checked for the whole bounded domain" |
+| **Cost-aware model routing** | Cheaper models or lower effort for tier A0 work, escalation on retry, strong and different models for review | low | **Yes, if** the real CLI accepts the model IDs you have |
+| **Requirement-to-proof graph** | Requirement → property → test → killed mutant → commit, with a gate | medium | Partly: the gate yes, the visual later |
+| Counterfactual replay | Regression-test the org: replay last week's tasks with a new config before adopting it | high | No (roadmap) |
+| Self-improving steering | A bot tests steering variants on a held-out benchmark and proposes only proven rules | high | No (roadmap) |
+| Skill synthesis from reviews | Repeated review findings become proposed Agent Skills | medium | Roadmap |
+| Budget-packing scheduler | Learn task costs from the ledger and pack the night's budget by value | medium | Roadmap |
+| Semantic conflict prediction | Use the import graph, not just file overlap, to separate parallel tasks | medium | Roadmap |
+| Séance Replay | Time-travel viewer of any agent run from stream-json logs | medium | Maybe, as part of the demo UI |
+| Shadow mode | Agents work the same tickets as humans without merging, to calibrate the autonomy ladder | medium | Roadmap |
+| Spec mutation | Mutate the requirements and check the tests notice | medium | Roadmap |
+
+**Honest priority:** the submission still lacks the two required apps (`apps/lazarus`, `apps/chimera`) and a single real Kiro run. Any of the "Yes" ideas is worth at most half a day, and only after those exist. The roadmap ideas belong in the video's closing seconds and the "What's next" section, not in the build.

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ideas · Night Shift</title>
-<meta name="description" content="32 Kiroween 2026 ideas rated for impact, innovation, design, risk and effort.">
+<meta name="description" content="Kiroween 2026 ideas rated for impact, innovation, design, risk and effort.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%239b7bff'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -12,7 +12,7 @@
 </head>
 <body data-page="ideas">
 <main id="main"><div class="wrap" style="padding-top:36px;padding-bottom:64px">
-  <div class="eyebrow">Idea bank</div><h1 style="font-size:clamp(28px,5vw,42px)">32 ideas, rated</h1>
+  <div class="eyebrow">Idea bank</div><h1 style="font-size:clamp(28px,5vw,42px)"><span id="h-n">67</span> ideas, rated</h1>
   <p class="muted" style="max-width:760px">Ratings (1 to 5) are judgment calls, not data. Risk and effort: higher is worse. Score is impact + innovation + design. Filter by category or status, and sort to compare.</p>
   <div class="toolbar" role="group" aria-label="Filters">
     <input type="search" id="q" placeholder="Search ideas, Kiro features…" aria-label="Search ideas">
@@ -24,13 +24,14 @@
   <div class="grid grid-2" id="grid"></div>
 </div></main>
 <script src="assets/site.js"></script>
+<script src="assets/ghost.js" defer></script>
 <script>
 (function () {
   var N = window.NS, params = new URLSearchParams(location.search);
   var state = { cat: params.get("category") || "", status: params.get("status") || "", q: "", sort: "score" }, data;
   var grid = document.getElementById("grid"), count = document.getElementById("count");
   function meter(label, v, risk) { return "<span>" + label + '</span><i class="' + (risk ? "risk" : "") + '" style="--w:' + (v * 20) + '%" role="img" aria-label="' + label + " " + v + ' of 5"></i>'; }
-  function statusChip(s) { return '<span class="chip ' + (s === "Chosen" ? "ok" : s === "Fallback" ? "warn" : s === "Roadmap" ? "violet" : "") + '">' + s + "</span>"; }
+  function statusChip(s) { return '<span class="chip ' + (s === "Chosen" || s === "Built" ? "ok" : s === "Fallback" ? "warn" : s === "Roadmap" ? "violet" : "") + '">' + s + "</span>"; }
   function pills(el, items, key) {
     el.innerHTML = '<button class="pill" data-v="" aria-pressed="' + (state[key] === "") + '">All</button>' + items.map(function (i) { return '<button class="pill" data-v="' + N.esc(i) + '" aria-pressed="' + (state[key] === i) + '">' + N.esc(i) + "</button>"; }).join("");
     el.onclick = function (e) { var b = e.target.closest("button"); if (!b) return; state[key] = b.getAttribute("data-v"); pills(el, items, key); draw(); };
@@ -40,11 +41,11 @@
     var list = data.ideas.filter(function (i) { return (!state.cat || i.category === state.cat) && (!state.status || i.status === state.status) && (!q || (i.title + " " + i.pitch + " " + i.kiro).toLowerCase().indexOf(q) > -1); });
     var score = function (i) { return i.impact + i.innovation + i.design; };
     list.sort(function (a, b) { return state.sort === "risk" ? a.risk - b.risk : state.sort === "effort" ? a.effort - b.effort : state.sort === "title" ? a.title.localeCompare(b.title) : score(b) - score(a); });
-    count.textContent = list.length + " of " + data.ideas.length + " ideas";
+    document.getElementById("h-n").textContent = data.ideas.length; count.textContent = list.length + " of " + data.ideas.length + " ideas";
     grid.innerHTML = list.map(function (i) {
       return '<article class="card"><div class="num">' + N.esc(i.category.toUpperCase()) + "</div><h3>" + N.esc(i.title) + "</h3><p>" + N.esc(i.pitch) + '</p><p><b>Kiro:</b> ' + N.esc(i.kiro) + "</p>" + statusChip(i.status) + '<span class="chip">score ' + score(i) + "/15</span>" +
         '<div class="meter">' + meter("Impact", i.impact) + meter("Innovation", i.innovation) + meter("Design", i.design) + meter("Risk", i.risk, true) + meter("Effort", i.effort, true) + '</div><p style="margin-top:10px"><a href="doc.html?doc=' + i.doc + '">Read more →</a></p></article>';
-    }).join("") || '<p class="muted">No ideas match.</p>';
+    }).join("") || '<p class="muted">👻 Nothing here but cobwebs. Try fewer words or <a href="ideas.html">clear the filters</a>.</p>';
   }
   N.getJSON("data/ideas.json").then(function (d) {
     data = d; pills(document.getElementById("cats"), d.categories, "cat"); pills(document.getElementById("stats"), d.statuses, "status");

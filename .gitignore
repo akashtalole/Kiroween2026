@@ -1,1 +1,14 @@
 _site/
+
+# secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# python build artefacts
+__pycache__/
+*.pyc
+.pytest_cache/
+.hypothesis/

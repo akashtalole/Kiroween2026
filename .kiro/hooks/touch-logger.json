@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Touch logger",
+      "description": "Logs every human prompt to ledger.ndjson so the Human Touch Index is measured, not remembered. Never blocks. VERIFY the trigger identifier for 'Prompt Submit' on the Hook types page, then set enabled to true.",
+      "trigger": "UserPromptSubmit",
+      "enabled": false,
+      "action": { "type": "command", "command": "python3 tools/hooks/ledger.py human_prompt" },
+      "timeout": 5
+    }
+  ]
+}

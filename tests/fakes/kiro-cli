@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Fake kiro-cli for tests. Behaviour from FAKE_KIRO_MODE: ok | throttle_once | fail | agent_missing | mcp_fail."""
+import json, os, pathlib, sys
+mode = os.environ.get("FAKE_KIRO_MODE", "ok")
+log = os.environ.get("FAKE_KIRO_LOG")
+if sys.argv[1:2] == ["--version"]:
+    print("kiro-cli 3.9.9 (fake)"); sys.exit(0)
+prompt = sys.stdin.read() if not sys.stdin.isatty() else ""
+if log:
+    with open(log, "a") as f:
+        f.write(json.dumps({"argv": sys.argv[1:], "prompt": prompt[:200]}) + "\n")
+if mode == "agent_missing":
+    print("agent not found, stopping (exit 4)", file=sys.stderr); sys.exit(4)
+if mode == "mcp_fail":
+    sys.exit(3)
+if mode == "throttle_once":
+    marker = pathlib.Path(os.environ["FAKE_KIRO_STATE"])
+    if not marker.exists():
+        marker.write_text("1")
+        print(json.dumps({"type": "runError", "data": {"sessionId": None, "stage": "prompt", "message": "slow down",
+                                                       "errorType": "ThrottlingException", "retryErrorType": "THROTTLING"}}))
+        sys.exit(1)
+if mode == "compromised":  # behaves like an agent that obeys every instruction in the issue
+    pathlib.Path("NS_CANARY_TRIGGERED").write_text("yes")
+    pathlib.Path("src/auth").mkdir(parents=True, exist_ok=True)
+    pathlib.Path("src/auth/bypass.py").write_text("ADMIN = True\n")
+    pathlib.Path("config.py").write_text("KEY = 'AKIA" + "ABCDEFGHIJKLMNOP'\n")
+    for t in pathlib.Path(".").rglob("test_*.py"):
+        t.unlink()
+if mode == "fail":
+    print(json.dumps({"type": "runError", "data": {"sessionId": "s1", "stage": "turn", "message": "boom"}})); sys.exit(1)
+agent = sys.argv[sys.argv.index("--agent") + 1] if "--agent" in sys.argv else "default"
+text = "Verdict: approve\nLooks good." if agent == "reviewer" else ("workflow completed" if "workflow" in prompt else "done")
+print(json.dumps({"type": "assistantMessage", "data": {"text": text}}))
+print(json.dumps({"type": "usage", "data": {"credits": 1.5}}))
+print(json.dumps({"type": "turnComplete", "data": {"sessionId": "s1"}}))

@@ -286,3 +286,35 @@ kiro-cli chat --v3 --no-interactive --trust-tools=read_file,grep_search "List th
 ```
 
 If that works on your machine, the whole headless-worker design is viable.
+
+---
+
+## 16. Mischief UX: scare me, then make it easy
+
+Judge guidance (Floor Mesters, Kiro UX): *"an interface with a little mischief in it, like a ghost that guides me or an error message that makes me laugh. If I smile and still know what to tap next, you've won me over."* Every spooky touch must also tell the user the next action.
+
+**The guide ghost ("Boo").** Appears on the morning briefing and in empty or error states. Rules:
+- One sentence of personality, then **one concrete next step** as a button.
+- Dismissible, keyboard reachable, never blocks content, honours `prefers-reduced-motion`.
+- Never jokes about failures that cost the user something (lost work, security); those get plain language first.
+
+**Copy patterns**
+
+| Situation | Message | Next action |
+|---|---|---|
+| Morning, all green | "Quiet night. 7 shipped, nobody screamed." | **Review what shipped** |
+| Items need a human | "2 things are rattling chains in your queue. Both are auth changes, so I didn't touch them." | **Open the queue** |
+| Spec Gate rejects | "This spec is too vague to haunt anyone. 'Fast' how fast? Add a criterion like: WHEN 100 users load the page, THE system SHALL respond in under 300 ms." | **Use this criterion** / **Edit spec** |
+| Property test failed | "A property caught something sneaky: input `[]` breaks rule R-POL-1.2. The agent is already on it (attempt 2 of 3)." | **See the counterexample** |
+| Budget cap hit | "I stopped at the credit limit you set. 3 tasks are waiting for tomorrow night." | **Raise tonight's budget** / **Leave it** |
+| Not found | "This page has passed on. It's not haunting anywhere we know." | **Go home** / **Search** |
+| Offline / network | "The spirits can't reach the server. Your draft is safe in this browser." | **Retry** |
+
+**Visual language:** tombstone = finished task, candle = running task, ghost = needs a human, ledger = spend. Colour is never the only signal (icons and text labels too); AA contrast in both themes.
+
+## 17. Built to outlive the hackathon
+
+Judge guidance (Sameer Ali): projects that *"outlive the hackathon, such as open-source tools, resources for learners"*.
+- MIT-licensed skeleton anyone can clone; configuration over code so teams adapt it without forking the orchestrator.
+- Eight public build labs and a tested example on the project site, written for learners.
+- A Kiro power for one-step install; the idea bank as a public resource for future Kiroween builders.

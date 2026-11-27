@@ -1,0 +1,24 @@
+# Headless Kiro review of every pull request, using the read-only `reviewer` agent.
+# Needs a repository secret KIRO_API_KEY (API keys are available on Pro-tier plans). Without it, the job is skipped.
+name: Kiro review
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    env:
+      KIRO_API_KEY: ${{ secrets.KIRO_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Skip when no Kiro key is configured
+        if: env.KIRO_API_KEY == ''
+        run: echo "KIRO_API_KEY not set; skipping Kiro review." >> "$GITHUB_STEP_SUMMARY"
+      - name: Install Kiro CLI
+        if: env.KIRO_API_KEY != ''
+        run: curl -fsSL https://cli.kiro.dev/install | bash && echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Review (verdict and findings go to the job summary)
+        if: env.KIRO_API_KEY != ''
+        run: python3 tools/nightshift/ns.py review --base "origin/${{ github.base_ref }}"
